@@ -13,7 +13,7 @@ return [
     |
     */
 
-    'default' => env('DB_CONNECTION', 'mysql'),
+    'default' => env('DB_CONNECTION', 'sqlsrv'),
 
     /*
     |--------------------------------------------------------------------------
@@ -69,11 +69,11 @@ return [
 
         'sqlsrv' => [
             'driver' => 'sqlsrv',
-            'host' => env('DB_HOST', 'localhost'),
-            'port' => env('DB_PORT', '1433'),
-            'database' => env('DB_DATABASE', 'forge'),
-            'username' => env('DB_USERNAME', 'forge'),
-            'password' => env('DB_PASSWORD', ''),
+            'host' => env('DB_HOST', '45.7.229.234'),
+            'port' => env('DB_PORT', '49411'),
+            'database' => env('DB_DATABASE', 'agendamatic'),
+            'username' => env('DB_USERNAME', 'agendamatic'),
+            'password' => env('DB_PASSWORD', 'sqlmatic'),
             'charset' => 'utf8',
             'prefix' => '',
         ],

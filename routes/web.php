@@ -12,9 +12,5 @@
 */
 
 Route::get('/', function () {
-    return view('index');
-});
-
-Route::get('/inicio', function () {
     return view('inicio');
 });
