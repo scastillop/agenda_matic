@@ -14,3 +14,5 @@
 Route::get('/', function () {
     return view('inicio');
 });
+
+Route::resource('schedules', 'ScheduleController');

@@ -32,6 +32,6 @@
 	<script src="{{ URL::asset('fullcalendar/lib/moment.min.js') }}"></script>
 	<script src="{{ URL::asset('fullcalendar/fullcalendar.js') }}"></script>
 	<script src="{{ URL::asset('fullcalendar/locale/es.js') }}"></script>
-	<script src="{{ URL::asset('js/inicio.js') }}"></script>
+	<script src="{{ URL::asset('js/calendar.js') }}"></script>
 	</body>
 </html>
