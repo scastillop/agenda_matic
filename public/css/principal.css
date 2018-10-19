@@ -71,7 +71,7 @@ h2 {
 	font-family:
 	"Helvetica Neue", Helvetica;
 }
-button{
+.boton_gris{
 	background-color:rgb(245, 245, 245);
 	background-image:linear-gradient(rgb(255, 255, 255), rgb(230, 230, 230));
 	background-repeat-x:;
@@ -138,4 +138,140 @@ button{
 .boton_opciones{
 	width: 100%;
 	margin-bottom: 15px;
+}
+
+.fc-button{
+	background-image: none;
+	background-color:rgb(221, 221, 221);
+	border-bottom-color:rgba(0, 0, 0, 0);
+	border-bottom-style:solid;
+	border-bottom-width:1px;
+	border-image-outset:0px;
+	border-image-repeat:stretch;
+	border-image-slice:100%;
+	border-image-source:none;
+	border-image-width:1;
+	border-left-color:rgba(0, 0, 0, 0);
+	border-left-style:solid;
+	border-left-width:1px;
+	border-right-color:rgba(0, 0, 0, 0);
+	border-right-style:solid;
+	border-right-width:1px;
+	border-top-color:rgba(0, 0, 0, 0);
+	border-top-style:solid;
+	border-top-width:1px;
+	box-sizing:border-box;
+	color:rgb(0, 0, 0);
+	cursor:pointer;
+	font-family:"Helvetica Neue", Helvetica;
+	font-size:16px;
+	font-stretch:100%;
+	font-style:normal;
+	font-variant-caps:normal;
+	font-variant-east-asian:normal;
+	font-variant-ligatures:normal;
+	font-variant-numeric:normal;
+	font-weight:400;
+	letter-spacing:normal;
+	text-shadow:none;
+	text-size-adjust:100%;
+	text-transform:none;
+	transition-delay:0s, 0s, 0s, 0s;
+	transition-duration:0.15s, 0.15s, 0.15s, 0.15s;
+	transition-property:color, background-color, border-color, box-shadow;
+	transition-timing-function:ease-in-out, ease-in-out, ease-in-out, ease-in-out;
+	user-select:none;
+	vertical-align:middle;
+	white-space:nowrap;
+	word-spacing:0px;
+	writing-mode:horizontal-tb;
+	-webkit-appearance:none;
+	-webkit-tap-highlight-color:rgba(0, 0, 0, 0);
+	-webkit-border-image:none;
+/*
+    color: #fff;    background-color: #5bc0de;
+    border-color: #46b8da;
+*/
+}
+.fc-button:hover{
+	background-color:rgb(201, 201, 201);
+}
+
+
+.btn-default{
+
+}
+.btn-default:hover{
+	background-color:rgb(201, 201, 201);
+}
+
+.dropdown-menu{
+	font-size: 0.8rem;
+}
+
+.input-chico{
+	height: 25px;
+}
+.margen-chico{
+	margin: 0;
+	margin-bottom: 2px;
+	padding:0;
+	white-space:nowrap;
+}
+.no-padding{
+	padding: 0;
+}
+
+@media (max-width: 400px) {
+  .fc-left {
+    margin-bottom: 10px !important;
+	}
+}
+
+option:disabled{
+	color: #ff8080;
+}
+
+.rojo{
+	color: #ff8080;	
+}
+.datepicker table tr td.active{
+	background-image: none;
+	background-color: #00b259 !important;
+}
+.datepicker table tr td.active:hover{
+	background-image: none;
+	background-color: #00984B !important;
+}
+.datepicker table tr td.today{
+	background-image: none;
+    background-color:#f1f1f1 !important;
+}
+.datepicker table tr td.today.disabled{
+	background-image: none;
+    background-color:#f1f1f1 !important;	
+}
+.datepicker table tr td.today:hover{
+	background-image: none;
+    background-color:#00984B !important;
+}
+.bootstrap-datetimepicker-widget table td.today:before {
+    content: none;
+}
+.timepicker-picker a{
+	color:#00984B !important;
+}
+.opciones_reunion{
+	color: #00b259;
+}
+.opciones_reunion:hover {
+	color: #00984B;
+	background-color: #f1f1f1;
+}
+
+#tabla_asistencia td{
+	padding: 5px 15px 5px 15px;
+}
+#tabla_asistencia th{
+	padding:  5px 15px 5px 15px;
 }
