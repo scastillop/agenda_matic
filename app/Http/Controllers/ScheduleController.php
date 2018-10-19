@@ -35,8 +35,24 @@ class ScheduleController extends Controller
      * @return \Illuminate\Http\Response
      */
     public function store(Request $request)
-    {
-        //
+    {   
+        $schedule = new Schedule();
+        $schedule ->created_at = $request['created_at'];
+        $schedule ->updated_at = $request['updated_at'];
+        $schedule ->owner_id = $request['owner_id'];
+        $schedule ->type = $request['type'];
+        $schedule ->status = $request['status'];
+        $schedule ->rejectable = $request['rejectable'];
+        $schedule ->start = $request['start'];
+        $schedule ->end = $request['end'];
+        $schedule ->details = $request['details'];
+        $schedule ->title = $request['title'];
+        $schedule ->all_day = $request['all_day'];
+        $schedule ->room_id = $request['room_id'];
+
+        //$schedule = Schedule::create($request->all());
+
+        return Schedule::saveSchedule($schedule);
     }
 
     /**
