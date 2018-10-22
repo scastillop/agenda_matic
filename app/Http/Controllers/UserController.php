@@ -83,8 +83,8 @@ class UserController extends Controller
         //
     }
 
-     public function getUsersByRange(Request $request)
+     public function getByRange(Request $request)
     {
-        return User::getUsers($request);
+        return User::getByRange($request);
     }
 }

@@ -102,8 +102,7 @@ $( document ).ready(function() {
             time: 'far fa-clock',
             date: 'far fa-calendar-alt',
         },
-         minDate: moment(),
-         debug:true
+         minDate: moment()
 	});
     $('#datetimepicker8').datetimepicker({
         useCurrent: false,
@@ -234,12 +233,11 @@ $( document ).ready(function() {
  		var currentLocation = window.location;
  		var data={inicio:inicio, final:final}
 	 	$.ajax({
-			url:currentLocation+'rooms/get_by_range',
+			url:currentLocation+'rooms/getByRange',
 	   		type:'POST',
 	   		headers: {'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')},
 	   		data:data,
 	   		success:function(rooms){
-	   			console.log(rooms);
 	   			$('#modal_agendar_ubicacion').empty();
 	   			$.each(rooms, function( index, room ) {
 	   				if(room.reuniones>0){
@@ -259,7 +257,7 @@ $( document ).ready(function() {
 				}
 				validarLLenado();
 				$.ajax({
-					url:currentLocation+'users/get_by_range',
+					url:currentLocation+'users/getByRange',
 			   		type:'POST',
 			   		headers: {'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')},
 			   		data:data,
@@ -268,14 +266,14 @@ $( document ).ready(function() {
 			   			$('#modal_agendar_invitados').empty();
 			   			$.each(users, function( index, user ) {
 			   				if(user.reuniones>0){
-			   					var disponible = false;
+			   					var disponible = "rojo";
 			   				}else{
-			   					var disponible = true;
+			   					var disponible = "";
 			   				}
 							$('#modal_agendar_usuarios').append($('<option>', {
 							    value: user.id,
 							    text: user.name,
-							    disabled: !disponible
+							    class: disponible
 							}));
 						});
 						validarLLenado();
@@ -403,33 +401,3 @@ $('#bloquear').click(function(){
 
  	$('#modal_bloquear').modal();
 })
-
- $.ajax({
- 	url:'rooms/getByRange',
- 	type:'POST',
- 	headers: {'X-CSRF-TOKEN' : $('meta[name="csrf-token"]').attr('content')},
- 	data:{inicio:moment("20181001 10:21", "YYYYMMDD HH:mm").format("YYYYMMDD HH:mm"), final:moment("20181030 10:21" , "YYYYMMDD HH:mm").format("YYYYMMDD HH:mm")},
- 	//data:data,
- 	success:function(rdata){
- 		console.log(rdata);
- 	},
- 	error: function(e){
- 		console.log(e);
- 	}
-
- })
-
-
- $.ajax({
- 	url:'users/getUsersByRange',
- 	type:'POST',
- 	headers: {'X-CSRF-TOKEN' : $('meta[name="csrf-token"]').attr('content')},
- 	data:{inicio:moment("20181001 10:21", "YYYYMMDD HH:mm").format("YYYYMMDD HH:mm"), final:moment("20181030 10:21" , "YYYYMMDD HH:mm").format("YYYYMMDD HH:mm")},
- 	//data:data,
- 	success:function(rdata){
- 		console.log(rdata);
- 	},
- 	error: function(e){
- 		console.log(e);
- 	}
- })

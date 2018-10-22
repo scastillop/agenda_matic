@@ -31,7 +31,7 @@ class User extends Authenticatable
 	
 	protected $table = 'users ';
 
-    public static function getUsers(Request $request){
+    public static function getByRange(Request $request){
         $users = \DB::table('users')
         ->leftJoin('guests', function($join) use ($request){
             $join->on('users.id', '=', 'guests.user_id');

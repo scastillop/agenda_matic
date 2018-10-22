@@ -10,7 +10,7 @@ class Room extends Model
     protected $table = 'rooms';
 
 
-    public static function getRoomsByRange(Request $request){
+    public static function getByRange(Request $request){
 
     	 $rooms = \DB::table('rooms')
             ->leftJoin('schedules', function($join) use ($request){

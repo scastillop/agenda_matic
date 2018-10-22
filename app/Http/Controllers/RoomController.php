@@ -86,6 +86,6 @@ class RoomController extends Controller
 
     public function getByRange(Request $request)
     {
-       return Room::getRoomsByRange($request);
+       return Room::getByRange($request);
     }
 }

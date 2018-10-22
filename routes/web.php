@@ -19,6 +19,6 @@ Route::resource('schedules', 'ScheduleController');
 
 Route::post('/rooms/getByRange', 'RoomController@getByRange');
 
-Route::post('/users/getUsersByRange', 'UserController@getUsersByRange');
+Route::post('/users/getByRange', 'UserController@getByRange');
 
 Route::post('/schedules/store', 'ScheduleController@store');
