@@ -3,7 +3,6 @@ $( document ).ready(function() {
 		eventLimit: true,
 		eventClick: function (data, event, view) {
 			$('.popover').popover('hide');
-			console.log(data);
 			var ver = '<div class="rounded opciones_reunion p-1 pr-2 pl-2 ver" title="ver evento"><i class="fas fa-eye"></i></div>';
 			var editar = "";
 			var cancelar = "";
@@ -30,12 +29,13 @@ $( document ).ready(function() {
 				 $('.popover').popover('hide');
 			});
 			$('.editar').click(function(){
+				$('#modal_agendar_recomendados_div').hide();
 				$('.popover').popover('hide');
 			 	$('#modal_agendar_inicio').val(data.start.format("DD/MM/YYYY HH:mm"));
 			 	$('#modal_agendar_termino').val(data.end.format("DD/MM/YYYY HH:mm"));
 			 	$("#modal_agendar_aceptar" ).prop("disabled", true);
-			 	//$( ".modal_agendar_fecha" ).prop("disabled", true);
-			 	//$( ".modal_agendar_fecha" ).empty();
+			 	$( ".modal_agendar_fecha" ).prop("disabled", true);
+			 	$( ".modal_agendar_fecha" ).empty();
 			 	$( '#modal_agendar_titulo' ).val(data.title);
 			 	$( '#modal_agendar_detalles').val(data.detalles);
 			 	if(data.allDay){
@@ -170,7 +170,8 @@ $( document ).ready(function() {
 					tipo: schedule.type,
 					detalles: schedule.details,
 					rechazable: schedule.rejectable,
-					sala: schedule.room_id
+					sala: schedule.room_id,
+					className:"punteable"
 				}
 				events.push(event);
 			});
@@ -184,10 +185,11 @@ $( document ).ready(function() {
  }
 
  $('#agendar').click(function(){
+ 	$('#modal_agendar_recomendados_div').hide();
  	$('.modal_agendar_rango').val("");
  	$( "#modal_agendar_aceptar" ).prop("disabled", true);
- 	//$( ".modal_agendar_fecha" ).prop("disabled", true);
- 	//$( ".modal_agendar_fecha" ).empty();
+ 	$( ".modal_agendar_fecha" ).prop("disabled", true);
+ 	$( ".modal_agendar_fecha" ).empty();
  	$( '#modal_agendar_titulo' ).val("");
  	$( '#modal_agendar_detalles' ).val("");
  	$( '#modal_agendar_rechazable' ).prop( "checked", false );
@@ -198,6 +200,8 @@ $( document ).ready(function() {
  	$('#modal_agendar_titulo_modal').text('Agendar reunión');
 
  	$('#modal_agendar').modal();
+ 	$('#datetimepicker7').datetimepicker({minDate: moment()});
+ 	$('#datetimepicker7').datetimepicker({maxDate: null});
  })
 
  $('.modal_agendar_form').change(function(){
@@ -217,7 +221,7 @@ $( document ).ready(function() {
  	var todo_el_dia = $('#modal_agendar_todo_el_dia').is(':checked');
  	var detalles = $.trim($('#modal_agendar_detalles').val());
  	var invitados =$.map($('#modal_agendar_invitados option'), function(element) {return element.value;});
- 	if(titulo!=""&&inicio!=""&&final!=""&&ubicacion!=""&&invitados.length>0){
+ 	if(titulo!=""&&inicio!=""&&final!=""&&ubicacion!=""&&invitados.length>0&&ubicacion!=null){
  		$( "#modal_agendar_aceptar" ).prop("disabled", false);
  	}else{
  		$( "#modal_agendar_aceptar" ).prop("disabled", true);
@@ -225,6 +229,10 @@ $( document ).ready(function() {
  }
 
  $('.modal_agendar_rango').on("input",function(){
+ 	verificarHora();
+ });
+
+ function verificarHora(){
  	var inicio = $.trim($('#modal_agendar_inicio').val());
  	var final = $.trim($('#modal_agendar_termino').val());
  	if(inicio!=""&&final!=""){
@@ -276,6 +284,7 @@ $( document ).ready(function() {
 							    class: disponible
 							}));
 						});
+						$( ".modal_agendar_fecha" ).prop("disabled", false);
 						validarLLenado();
 			   		},
 			   		error: function(e){
@@ -286,7 +295,7 @@ $( document ).ready(function() {
 	   			console.log(e);   		}
 		});
  	}
- });
+ };
 
  $('.dual_list_select').change(function(){
 	var esto=this;
@@ -315,14 +324,16 @@ function ordernar_listas(lista){
 }
 
 $("#modal_agendar_aceptar").click(function(){
+	var currentLocation = window.location;
 	var titulo = $.trim($('#modal_agendar_titulo').val());
- 	var inicio = $.trim($('#modal_agendar_inicio').val());
- 	var final = $.trim($('#modal_agendar_termino').val());
+ 	var inicio = moment($.trim($('#modal_agendar_inicio').val()), 'DD/MM/YYYY HH:mm').format('YYYYMMDD HH:mm');
+ 	var final = moment($.trim($('#modal_agendar_termino').val()), 'DD/MM/YYYY HH:mm').format('YYYYMMDD HH:mm');
  	var ubicacion = $('#modal_agendar_ubicacion').val();
- 	var rechazable = $('#modal_agendar_rechazable').is(':checked');
- 	var todo_el_dia = $('#modal_agendar_todo_el_dia').is(':checked');
+ 	var rechazable = $('#modal_agendar_rechazable').is(':checked')? 1 : 0;;
+ 	var todo_el_dia = $('#modal_agendar_todo_el_dia').is(':checked')? 1 : 0;;
  	var detalles = $.trim($('#modal_agendar_detalles').val());
- 	var invitados =$.map($('#modal_agendar_invitados option'), function(element) {return element;});
+ 	var invitados =$.map($('#modal_agendar_invitados option'), function(element) {return $(element).val();});
+ 	var invitadosOptions =$.map($('#modal_agendar_invitados option'), function(element) {return element;});
  	if(titulo!=""&&inicio!=""&&final!=""&&ubicacion!=""&&invitados.length>0){
  		$( "#modal_agendar_aceptar" ).prop("disabled", false);
  		data={
@@ -336,12 +347,14 @@ $("#modal_agendar_aceptar").click(function(){
  			invitados: invitados
  		}
  		var hayOcupados=false;
- 		$.each(invitados, function( index, invitado ) {
+ 		$.each(invitadosOptions, function( index, invitado ) {
  			if($(invitado).attr('class')=="rojo"){
 				hayOcupados=true;
  			}
  		});
  		if(hayOcupados){
+ 			$('#modal_ocupados').modal({backdrop: 'static', keyboard: false});
+ 			$('#modal_agendar').modal('hide');
  			$('#modal_ocupados').modal('show');
  			$('#modal_ocupados_aceptar').click(function(){
  				$.ajax({
@@ -351,7 +364,9 @@ $("#modal_agendar_aceptar").click(function(){
 			   		data:data,
 			   		success:function(status){
 			   			if(status){
+			   				fillCalendar();
 			   				$('#modal_agendar').modal('hide');
+			   				$('#modal_ocupados').modal('hide');
 			   				$('#modal_exito').modal('show');
 			   			}
 			   		},
@@ -361,32 +376,57 @@ $("#modal_agendar_aceptar").click(function(){
 			   	});
  			});
  			$('#modal_ocupados_buscar').click(function(){
+ 				$('#modal_ocupados_buscar').html('<i class="fa fa-spinner fa-spin"></i> Buscando...');
+ 				$('#modal_ocupados_aceptar').prop("disabled", true);
  				$.ajax({
-					url:currentLocation+'schedules/get_free_time',
+					url:currentLocation+'users/getFreeTime',
 			   		type:'POST',
 			   		headers: {'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')},
 			   		data:data,
-			   		success:function(data){
-
+			   		success:function(options){
+			   			$('#modal_ocupados_buscar').html('Ver otro horario');
+ 						$('#modal_ocupados_aceptar').prop("disabled", false);
+ 						$('#modal_agendar_recomendados').empty();
+ 						options.forEach(function(option) {
+ 							$('#modal_agendar_recomendados').append('<tr><td class="pt-0 pl-3 pr-3 pb-0">'+moment(option.start, "YYYYMMDD HH:mm").format("DD/MM/YYYY HH:mm")+'</td><td class="pt-0 pl-3 pr-3 pb-0">'+moment(option.end, "YYYYMMDD HH:mm").format("DD/MM/YYYY HH:mm")+'</td><td class="pt-0 pl-3 pr-3 pb-0"><i class="far fa-check-circle modal_agendar_recomendados_seleccionar" data-inicio="'+moment(option.start, "YYYYMMDD HH:mm").format("DD/MM/YYYY HH:mm")+'" data-final="'+moment(option.end, "YYYYMMDD HH:mm").format("DD/MM/YYYY HH:mm")+'"></i></td></tr>');
+ 						});
+ 						$('#modal_agendar_recomendados_div').show();
+ 						$('#modal_ocupados').modal('hide');
+ 						$('#modal_agendar').modal('show');
+ 						$('.modal_agendar_recomendados_seleccionar').click(function(){
+							$('#modal_agendar_inicio').val($(this).data("inicio"));
+							$('#modal_agendar_termino').val($(this).data("final"));
+							$('#modal_agendar_recomendados_div').hide();
+							verificarHora();
+						});
 			   		},
 			   		error: function(e){
 			   			console.log(e); 		
 			   		}
 			   	});
  			});
+ 		}else{
+ 			$.ajax({
+				url:currentLocation+'schedules',
+		   		type:'POST',
+		   		headers: {'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')},
+		   		data:data,
+		   		success:function(status){
+		   			if(status){
+		   				fillCalendar();
+		   				$('#modal_agendar').modal('hide');
+		   				$('#modal_exito').modal('show');
+		   			}
+		   		},
+		   		error: function(e){
+		   			console.log(e); 		
+		   		}
+		   	});
  		}
 
  	}else{
  		$( "#modal_agendar_aceptar" ).prop("disabled", true);
  	}
-});
-
-
-$('#modal_ocupados').on('show.bs.modal', function (event) {
-	$('#modal_agendar').modal('hide');
-});
-$('#modal_ocupados').on('hide.bs.modal', function (event) {
-	$('#modal_agendar').modal('show');
 });
 
 
@@ -400,4 +440,4 @@ $('#bloquear').click(function(){
  	$( '#modal_bloquear_todo_el_dia' ).prop( "checked", false );
 
  	$('#modal_bloquear').modal();
-})
+});

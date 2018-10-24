@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\User;
 use Illuminate\Http\Request;
+use Carbon\Carbon;
 
 class UserController extends Controller
 {
@@ -83,8 +84,61 @@ class UserController extends Controller
         //
     }
 
-     public function getByRange(Request $request)
+    public function getByRange(Request $request)
     {
+        $request->validate([
+            'inicio' => 'required|date',
+            'final' => 'required|date'
+        ]);
         return User::getByRange($request);
     }
+
+    public function getFreeTime(Request $request)
+    {
+        $request->validate([
+            'inicio' => 'required|date',
+            'final' => 'required|date',
+            "invitados"    => "required|array|min:1",
+            "invitados.*"  => "integer|min:1"
+        ]);
+
+        $options[0] =  $this->getAfterTime($request["inicio"],$request["final"],$request["invitados"]);
+        $options[1] =  $this->getBeforeTime($request["inicio"],$request["final"],$request["invitados"]);
+        return $options;
+    }
+
+    public function getAfterTime($start, $end, $guests){
+        $users = User::getByRangeAndId($start, $end, $guests);
+        $theyAreBusy = false;
+        foreach ($users as $user) {
+            if($user->reuniones>0){
+                $theyAreBusy=true;
+            }
+        }
+        if($theyAreBusy){
+            return UserController::getAfterTime(Carbon::parse($start)->addMinutes(30)->format('Ymd H:i'),Carbon::parse($end)->addMinutes(30)->format('Ymd H:i'),$guests);
+        }else{
+            $result["start"] = $start;
+            $result["end"] = $end;
+            return $result;
+        }
+    }
+
+    public function getBeforeTime($start, $end, $guests){
+        $users = User::getByRangeAndId($start, $end, $guests);
+        $theyAreBusy = false;
+        foreach ($users as $user) {
+            if($user->reuniones>0){
+                $theyAreBusy=true;
+            }
+        }
+        if($theyAreBusy){
+            return UserController::getBeforeTime(Carbon::parse($start)->subMinutes(30)->format('Ymd H:i'),Carbon::parse($end)->subMinutes(30)->format('Ymd H:i'),$guests);
+        }else{
+            $result["start"] = $start;
+            $result["end"] = $end;
+            return $result;
+        }
+    }
+
 }

@@ -263,6 +263,7 @@ option:disabled{
 }
 .opciones_reunion{
 	color: #00b259;
+	cursor: pointer;
 }
 .opciones_reunion:hover {
 	color: #00984B;
@@ -274,4 +275,16 @@ option:disabled{
 }
 #tabla_asistencia th{
 	padding:  5px 15px 5px 15px;
+}
+
+.punteable{
+    cursor: pointer;
+}
+
+.modal_agendar_recomendados_seleccionar{
+	color: #00b259;
+	cursor: pointer;
+}
+.modal_agendar_recomendados_seleccionar:hover{
+	color:#00984B;
 }

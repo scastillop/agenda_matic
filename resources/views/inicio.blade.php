@@ -69,6 +69,31 @@
 					            </div>
 					        </div>
 					    </div>
+						<div class="form-group col-12 mt-2 mb-1 pr-0 pl-0" id="modal_agendar_recomendados_div">
+							<label for="modal_agendar_ubicacion" class="col-6 text-nowrap m-0 p-0">Horarios recomendados</label>
+						    <table class="table-bordered w-100 mt-1" id="modal_agendar_recomendados">
+						    	<!--
+						    	<thead>
+						    		<tr>
+						    			<td>Fecha y hora de inicio</td>
+						    			<td>Fecha y hora de termino</td>
+						    			<td>Seleccionar</td>
+						    		</tr>
+						    	</thead>
+						    	-->
+								<tr>
+									<td class="pt-0 pl-3 pr-3 pb-0">24/10/2018 17:01</td>
+									<td class="pt-0 pl-3 pr-3 pb-0">24/10/2018 17:01</td>
+									<td class="pt-0 pl-3 pr-3 pb-0"><i class="far fa-check-circle modal_agendar_recomendados_seleccionar"></i></td>
+								</tr>
+								<tr>
+									<td class="pt-0 pl-3 pr-3 pb-0">24/10/2018 17:01</td>
+									<td class="pt-0 pl-3 pr-3 pb-0">24/10/2018 17:01</td>
+									<td class="pt-0 pl-3 pr-3 pb-0"><i class="far fa-check-circle modal_agendar_recomendados_seleccionar"></i></td>
+								</tr>
+							</table>
+						</div>
+
 						<div class="form-group col-6 mt-2 mb-1 pr-2 pl-0">
 							<label for="modal_agendar_ubicacion" class="col-6 text-nowrap m-0 p-0">Ubicacion</label>
 						    <select class="input-sm form-control input-chico modal_agendar_fecha modal_agendar_form pt-0 pb-0" id="modal_agendar_ubicacion">
@@ -127,9 +152,6 @@
 	    <div class="modal-content">
 	      <div class="modal-header">
 	        <h2 class="modal-title">Atención!</h2>
-	        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-	          <span aria-hidden="true">&times;</span>
-	        </button>
 	      </div>
 	      <div class="modal-body">
 	        Esta intentando agendar una reunion en la que hay invitados comprometidos previamente con otras reuniones.
@@ -138,8 +160,8 @@
 	        Si lo desea puede agendar igualmente la reunion o solicitar la busqueda del horario mas cercano en el que los invitados no esten comprometidos. 
 	      </div>
 	      <div class="modal-footer">
-	      	<button type="button" class="btn btn-success" data-dismiss="modal" id="modal_ocupados_aceptar">Agendar igualmente</button>
-	        <button type="button" class="btn btn-default" data-dismiss="modal" id="modal_ocupados_buscar">Ver otro horario</button>
+	      	<button type="button" class="btn btn-success" id="modal_ocupados_aceptar">Agendar igualmente</button>
+	        <button type="button" class="btn btn-default" id="modal_ocupados_buscar">Ver otro horario</button>
 	      </div>
 	    </div>
 	  </div>
