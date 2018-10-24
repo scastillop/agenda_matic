@@ -21,4 +21,5 @@ Route::post('/rooms/getByRange', 'RoomController@getByRange');
 
 Route::post('/users/getByRange', 'UserController@getByRange');
 
-Route::post('/schedules/store', 'ScheduleController@store');
+Route::post('/users/getFreeTime', 'UserController@getFreeTime');
+

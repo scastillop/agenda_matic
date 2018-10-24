@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Schedule;
+use App\Guest;
 use Illuminate\Http\Request;
 
 class ScheduleController extends Controller
@@ -36,23 +37,40 @@ class ScheduleController extends Controller
      */
     public function store(Request $request)
     {   
+        $request->validate([
+            'rechazable' => 'boolean',
+            'inicio' => 'required|date',
+            'final' => 'required|date',
+            'titulo' => 'required|string',
+            'todo_el_dia' => 'boolean',
+            'ubicacion' => 'integer|min:1',
+            "invitados"    => "required|array|min:1",
+            "invitados.*"  => "integer|min:1"
+        ]);
+
         $schedule = new Schedule();
-        $schedule ->created_at = $request['created_at'];
-        $schedule ->updated_at = $request['updated_at'];
-        $schedule ->owner_id = $request['owner_id'];
-        $schedule ->type = $request['type'];
-        $schedule ->status = $request['status'];
-        $schedule ->rejectable = $request['rejectable'];
-        $schedule ->start = $request['start'];
-        $schedule ->end = $request['end'];
-        $schedule ->details = $request['details'];
-        $schedule ->title = $request['title'];
-        $schedule ->all_day = $request['all_day'];
-        $schedule ->room_id = $request['room_id'];
+        $schedule ->owner_id = '1';
+        $schedule ->type = 'meeting';
+        $schedule ->status = 'scheduled';
+        $schedule ->rejectable = $request['rechazable'];
+        $schedule ->start = $request['inicio'];
+        $schedule ->end = $request['final'];
+        $schedule ->details = isset($request['detalles'])? "" : $request['detalles'];
+        $schedule ->title = $request['titulo'];
+        $schedule ->all_day = $request['todo_el_dia'];
+        $schedule ->room_id = $request['ubicacion'];
 
-        //$schedule = Schedule::create($request->all());
+        $schedule_id = Schedule::saveSchedule($schedule);
 
-        return Schedule::saveSchedule($schedule);
+        foreach ($request['invitados'] as $user_id) {
+            $guest = new Guest();
+            $guest->user_id = $user_id;
+            $guest->schedule_id = $schedule_id;
+            $guest->concurred = 0;
+            $guest->rejected = 0;
+            Guest::saveGuest($guest);
+        }
+        return 1;
     }
 
     /**
