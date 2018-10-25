@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Schedule;
 use App\Guest;
 use Illuminate\Http\Request;
+use Carbon\Carbon;
 
 class ScheduleController extends Controller
 {
@@ -15,7 +16,7 @@ class ScheduleController extends Controller
      */
     public function index()
     {
-        $shedules = Schedule::get();
+        $shedules = Schedule::getValid();
         return $shedules;
     }
 
@@ -49,12 +50,27 @@ class ScheduleController extends Controller
         ]);
 
         $schedule = new Schedule();
+
+        if($request["todo_el_dia"]){
+            $start = Carbon::parse($request['inicio']);
+            $start->hour = 0;
+            $start->minute = 0;
+            $schedule ->start = $start->format('Ymd H:i');
+            $end = Carbon::parse($request['final']);
+            $end->addDay();
+            $end->hour = 0;
+            $end->minute = 0;
+            $schedule ->end = $end->format('Ymd H:i');
+        }else{
+            $schedule ->start = $request['inicio'];
+            $schedule ->end = $request['final'];
+        }
+        
         $schedule ->owner_id = '1';
         $schedule ->type = 'meeting';
         $schedule ->status = 'scheduled';
         $schedule ->rejectable = $request['rechazable'];
-        $schedule ->start = $request['inicio'];
-        $schedule ->end = $request['final'];
+        
         $schedule ->details = isset($request['detalles'])? "" : $request['detalles'];
         $schedule ->title = $request['titulo'];
         $schedule ->all_day = $request['todo_el_dia'];
@@ -116,5 +132,15 @@ class ScheduleController extends Controller
     public function destroy(Schedule $schedule)
     {
         //
+    }
+
+    public function cancelById(Request $request)
+    {
+        $request->validate([
+            'id' => 'required|integer',
+        ]);
+        Schedule::cancelById($request["id"]);
+
+        return "1";
     }
 }

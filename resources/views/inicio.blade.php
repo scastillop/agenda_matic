@@ -180,7 +180,26 @@
 	        La reunión ha sido registrada satisfactoriamente.
 	      </div>
 	      <div class="modal-footer">
-	      	<button type="button" class="btn btn-success" data-dismiss="modal" id="modal_ocupados_volver">Volver</button>
+	      	<button type="button" class="btn btn-success" data-dismiss="modal" id="modal_exito_volver">Volver</button>
+	      </div>
+	    </div>
+	  </div>
+	</div>
+
+	<div class="modal fade" id="modal_exito_cancel" tabindex="10" role="dialog" aria-hidden="true">
+	  <div class="modal-dialog modal-dialog-centered" role="document">
+	    <div class="modal-content">
+	      <div class="modal-header">
+	        <h2 class="modal-title">Éxito!</h2>
+	        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+	          <span aria-hidden="true">&times;</span>
+	        </button>
+	      </div>
+	      <div class="modal-body">
+	        La reunión ha sido cancelada satisfactoriamente.
+	      </div>
+	      <div class="modal-footer">
+	      	<button type="button" class="btn btn-success" data-dismiss="modal" id="modal_exito_volver">Volver</button>
 	      </div>
 	    </div>
 	  </div>
@@ -316,7 +335,7 @@
 							 <div class="modal_ver_form" id="modal_ver_rechazable">Si</div>
 						</div>
 						<div class="col-6 p-0 mt-2 mb-1 pr-0 pl-1">
-							<div class="m-0 p-0" id="modal_ver_todo_el_dia"><strong>El evento abarca todo el dia</strong></div>
+							<div class="m-0 p-0"><strong>El evento abarca todo el dia</strong></div>
 							<div class="modal_ver_form" id="modal_ver_todo_el_dia">No</div>
 						</div>
 						<div class="col-12 p-0 mt-1 mb-3 pr-0 pl-0">
