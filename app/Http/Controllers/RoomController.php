@@ -86,6 +86,18 @@ class RoomController extends Controller
 
     public function getByRange(Request $request)
     {
+        $request->validate([
+            'inicio' => 'required|date',
+            'final' => 'required|date'
+        ]);
        return Room::getByRange($request);
+    }
+
+    public function getById(Request $request)
+    {
+        $request->validate([
+            'id' => 'required|integer',
+        ]);
+       return Room::getById($request["id"]);
     }
 }

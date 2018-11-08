@@ -140,5 +140,11 @@ class UserController extends Controller
             return $result;
         }
     }
-
+    public function getByScheduleId(Request $request)
+    {
+        $request->validate([
+            'id' => 'required|integer',
+        ]);
+        return User::getByScheduleId($request["id"]);
+    }
 }

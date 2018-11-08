@@ -10,16 +10,15 @@
 | contains the "web" middleware group. Now create something great!
 |
 */
-
-Route::get('/', function () {
-    return view('inicio');
-});
-
+//views
+Route::get('/', function () {return view('inicio');});
+//shedules
 Route::resource('schedules', 'ScheduleController');
-
+Route::post('/schedules/cancelById', 'ScheduleController@cancelById');
+//rooms
 Route::post('/rooms/getByRange', 'RoomController@getByRange');
-
+Route::post('/rooms/getById', 'RoomController@getById');
+//users
 Route::post('/users/getByRange', 'UserController@getByRange');
-
 Route::post('/users/getFreeTime', 'UserController@getFreeTime');
-
+Route::post('/users/getByScheduleId', 'UserController@getByScheduleId');

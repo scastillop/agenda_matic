@@ -38,12 +38,16 @@ class User extends Authenticatable
         })
         ->leftJoin('schedules', function($join) use ($request){
             $join->on('schedules.id', '=', 'guests.schedule_id')
+            ->where('schedules.status', '=', 'scheduled')
             ->whereBetween('schedules.start', array($request["inicio"], $request["final"]));
             $join->orOn('schedules.id', '=', 'guests.schedule_id')
+            ->where('schedules.status', '=', 'scheduled')
             ->WhereBetween('schedules.end', array($request["inicio"], $request["final"]));
             $join->orOn('schedules.id', '=', 'guests.schedule_id')
+            ->where('schedules.status', '=', 'scheduled')
             ->whereRaw("? between [schedules].[start] and [schedules].[end]", $request["inicio"]);
             $join->orOn('schedules.id', '=', 'guests.schedule_id')
+            ->where('schedules.status', '=', 'scheduled')
             ->whereRaw("? between [schedules].[start] and [schedules].[end]", $request["final"]); 
         })
         ->select('users.id', 'users.name', \DB::raw('count(schedules.id) AS reuniones'))
@@ -58,17 +62,30 @@ class User extends Authenticatable
         })
         ->leftJoin('schedules', function($join) use ($start, $end, $guests){
             $join->on('schedules.id', '=', 'guests.schedule_id')
+            ->where('schedules.status', '=', 'scheduled')
             ->whereBetween('schedules.start', array($start, $end));
             $join->orOn('schedules.id', '=', 'guests.schedule_id')
+            ->where('schedules.status', '=', 'scheduled')
             ->WhereBetween('schedules.end', array($start, $end));
             $join->orOn('schedules.id', '=', 'guests.schedule_id')
+            ->where('schedules.status', '=', 'scheduled')
             ->whereRaw("? between [schedules].[start] and [schedules].[end]", $start);
             $join->orOn('schedules.id', '=', 'guests.schedule_id')
+            ->where('schedules.status', '=', 'scheduled')
             ->whereRaw("? between [schedules].[start] and [schedules].[end]", $end); 
         })
         ->whereIn('users.id', $guests)
         ->select('users.id', 'users.name', \DB::raw('count(schedules.id) AS reuniones'))
         ->groupBy('users.id','users.name')->get();
+        return $users;
+    }
+
+    public static function getByScheduleId($id){
+        $users = \DB::table('users')
+        ->join('guests', 'users.id', '=', 'guests.user_id')
+        ->join('schedules', 'schedules.id', '=', 'guests.schedule_id')
+        ->where('schedules.id', "=", $id)
+        ->get();
         return $users;
     }
 }

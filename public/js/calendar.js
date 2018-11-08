@@ -1,7 +1,10 @@
 $( document ).ready(function() {
 	$('#calendar').fullCalendar({
 		eventLimit: true,
+		timeFormat: 'HH:mm',
 		eventClick: function (data, event, view) {
+			var currentLocation = window.location;
+			//console.log(data);
 			$('.popover').popover('hide');
 			var ver = '<div class="rounded opciones_reunion p-1 pr-2 pl-2 ver" title="ver evento"><i class="fas fa-eye"></i></div>';
 			var editar = "";
@@ -64,6 +67,23 @@ $( document ).ready(function() {
 				$('.popover').popover('hide');
 				$('#modal_eliminar_body').html('Realmente desea eliminar la reunión "<strong>'+data.title+'</strong>" del dia '+data.start.format("DD-MM-YYYY")+' a las '+data.start.format("HH:mm")+'?');
 			 	$('#modal_eliminar').modal();
+			 	$('#modal_eliminar_cancelar').click(function(){
+			 		$.ajax({
+					url:currentLocation+'schedules/cancelById',
+			   		type:'POST',
+			   		headers: {'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')},
+			   		data:{id: data.id},
+			   		success:function(success){
+			   			if(success){
+			   				fillCalendar();
+			   				$('#modal_exito_cancel').modal();
+			   			}
+			   		},
+			   		error: function(e){
+			   			console.log(e); 		
+			   		}
+			   	});
+			 	});
 			});
 
 			$('.ver').click(function(){
@@ -76,17 +96,44 @@ $( document ).ready(function() {
 			 	}else{
 			 		$( '#modal_ver_detalles').text("Este evento no tiene detalles adicionales.");
 			 	}
-			 	
 			 	if(data.allDay){
-			 		$( '#modal_agendar_todo_el_dia' ).text("Si");
+			 		$( '#modal_ver_todo_el_dia' ).text("Si");
 			 	}else{
-			 		$( '#modal_agendar_todo_el_dia' ).text("No");
+			 		$( '#modal_ver_todo_el_dia' ).text("No");
 			 	}
 			 	if(data.rechazable){
-			 		$( '#modal_agendar_rechazable' ).text("Si");
+			 		$( '#modal_ver_rechazable' ).text("Si");
 			 	}else{
-			 		$( '#modal_agendar_rechazable' ).text("No");
+			 		$( '#modal_ver_rechazable' ).text("No");
 			 	}
+			 	$.ajax({
+					url:currentLocation+'rooms/getById',
+			   		type:'POST',
+			   		headers: {'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')},
+			   		data:{id: data.sala},
+			   		success:function(room){
+			   			$('#modal_ver_ubicacion').empty();
+			   			$('#modal_ver_ubicacion').append(room[0].name);
+			   		},
+			   		error: function(e){
+			   			console.log(e); 		
+			   		}
+			   	});
+			 	$.ajax({
+					url:currentLocation+'users/getByScheduleId',
+			   		type:'POST',
+			   		headers: {'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')},
+			   		data:{id: data.id},
+			   		success:function(users){
+			   			$('#modal_ver_invitados').empty();
+			   			users.forEach(function(user) {
+			   				$('#modal_ver_invitados').append(user.name+"<br>");
+			   			});
+			   		},
+			   		error: function(e){
+			   			console.log(e); 		
+			   		}
+			   	});
 			 	$('#modal_ver').modal();
 			});
 
@@ -149,7 +196,8 @@ $( document ).ready(function() {
        	type:'GET',
        	url:currentLocation+'schedules',
        	success:function(schedules){
-       		events = [];
+       		//console.log(schedules);
+       		var events = [];
 			schedules.forEach(function(schedule) {
 				if($.fullCalendar.moment(new Date())>$.fullCalendar.moment(schedule.end)){
 					color = '#FE9A2E';
@@ -158,6 +206,8 @@ $( document ).ready(function() {
 				}else{
 					color = '#FF4000';
 				}
+				var allDay = schedule.all_day=="1" ? true : false;
+				var rechazable = schedule.rejectable=="1" ? true : false;				
 				event={
 					id:schedule.id,
 					title:schedule.title,
@@ -165,13 +215,14 @@ $( document ).ready(function() {
 					end:schedule.end,
 					backgroundColor: color,
 					borderColor: color,
-					allDay: schedule.all_day,
+					allDay: allDay,
 					textColor: 'white',
 					tipo: schedule.type,
 					detalles: schedule.details,
-					rechazable: schedule.rejectable,
+					rechazable: rechazable,
 					sala: schedule.room_id,
-					className:"punteable"
+					className:"punteable",
+					displayEventTime:!allDay
 				}
 				events.push(event);
 			});
@@ -239,7 +290,7 @@ $( document ).ready(function() {
  		var inicio = moment(inicio, 'DD/MM/YYYY HH:mm').format('YYYYMMDD HH:mm');
  		var final = moment(final, 'DD/MM/YYYY HH:mm').format('YYYYMMDD HH:mm');
  		var currentLocation = window.location;
- 		var data={inicio:inicio, final:final}
+ 		var data={inicio:inicio, final:final};
 	 	$.ajax({
 			url:currentLocation+'rooms/getByRange',
 	   		type:'POST',
