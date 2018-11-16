@@ -96,8 +96,13 @@ class RoomController extends Controller
     public function getById(Request $request)
     {
         $request->validate([
-            'id' => 'required|integer',
+            'id' => 'required|integer'
         ]);
        return Room::getById($request["id"]);
+    }
+
+    public function getAll()
+    {
+       return Room::getAll();
     }
 }

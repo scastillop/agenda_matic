@@ -71,7 +71,7 @@ class ScheduleController extends Controller
         $schedule ->status = 'scheduled';
         $schedule ->rejectable = $request['rechazable'];
         
-        $schedule ->details = isset($request['detalles'])? "" : $request['detalles'];
+        $schedule ->details = isset($request['detalles'])? $request['detalles'] : "";
         $schedule ->title = $request['titulo'];
         $schedule ->all_day = $request['todo_el_dia'];
         $schedule ->room_id = $request['ubicacion'];
@@ -142,4 +142,20 @@ class ScheduleController extends Controller
 
         return "1";
     }
+    
+        public function getById(Request $request)
+    {
+
+        $request->validate([
+            'id' => 'required|integer'
+        ]);
+
+       return Schedule::getById($request["id"]);
+    }
+
+    public function getAll()
+    {
+       return Schedule::getAll();
+    }
+
 }

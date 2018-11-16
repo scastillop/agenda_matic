@@ -82,4 +82,19 @@ class GuestController extends Controller
     {
         //
     }
+
+    public function getById(Request $request)
+    {
+
+        $request->validate([
+            'id' => 'required|integer'
+        ]);
+
+       return Guest::getById($request["id"]);
+    }
+
+    public function getAll()
+    {
+       return Guest::getAll();
+    }
 }

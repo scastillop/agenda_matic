@@ -22,3 +22,7 @@ Route::post('/rooms/getById', 'RoomController@getById');
 Route::post('/users/getByRange', 'UserController@getByRange');
 Route::post('/users/getFreeTime', 'UserController@getFreeTime');
 Route::post('/users/getByScheduleId', 'UserController@getByScheduleId');
+Route::post('/rooms/getById', 'RoomController@getById');
+Route::post('/rooms/getAll', 'RoomController@getAll');
+
+Route::post('/mail/send', 'MailController@send');

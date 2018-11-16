@@ -492,3 +492,34 @@ $('#bloquear').click(function(){
 
  	$('#modal_bloquear').modal();
 });
+
+
+/*
+var currentLocation = window.location;
+
+$.ajax({
+    url: currentLocation+'rooms/getById',
+    type:  'POST',
+    headers: {'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')},
+    data: {id : "1"},
+    success:  function (respuesta){
+    	console.log(respuesta);
+    },
+    error: function (request, status, error){
+    	console.log(error)
+    }
+});
+
+
+$.ajax({
+   	 url: currentLocation+'mail/send',
+    type:  'POST',
+    headers: {'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')},
+    success:  function (respuesta){
+    	console.log(respuesta);
+    },
+    error: function (request, status, error){
+    	console.log(error)
+    }
+});
+*/
