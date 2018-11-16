@@ -32,5 +32,20 @@ class Schedule extends BaseModel
         ->where('id', "=", $id)
         ->update(['status' => "canceled"]);
      }
+     
+     public static function getById($id){
+
+         $schedule = \DB::table('schedule')
+         ->where('id', '=' ,$id)->get();
+        
+       return $schedule; 
+   }
+
+   public static function getAll(){
+
+         $schedule = \DB::table('schedule')->get();
+        
+       return $schedule; 
+   }
 
 }
