@@ -149,4 +149,18 @@ class UserController extends Controller
         return User::getByScheduleId($request["id"]);
     }
 
+    public function getById(Request $request)
+    {
+        $request->validate([
+            'id' => 'required|integer'
+        ]);
+
+       return User::getById($request["id"]);
+    }
+
+    public function getAll()
+    {
+       return User::getAll();
+    }
+
 }

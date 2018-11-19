@@ -88,4 +88,19 @@ class User extends Authenticatable
         ->get();
         return $users;
     }
+    
+    public static function getById($id){
+
+         $users = \DB::table('users')
+         ->where('id', '=' ,$id)->get();
+        
+       return $users; 
+   }
+
+   public static function getAll(){
+
+         $users = \DB::table('users')->get();
+        
+       return $users; 
+   }
 }

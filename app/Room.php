@@ -38,4 +38,9 @@ class Room extends Model
        return $room;
    }
 
+   public static function getAll(){
+        $rooms = \DB::table('rooms')->get();
+       return $rooms; 
+   }
+
 }

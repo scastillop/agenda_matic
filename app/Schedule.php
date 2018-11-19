@@ -18,8 +18,7 @@ class Schedule extends BaseModel
         return $schedule->id;
      }
 
-     public static function getValid(){
-        
+     public static function getValid()
         $schedules = \DB::table('schedules')
         ->where('status', "=", "scheduled")
         ->get();
@@ -32,5 +31,20 @@ class Schedule extends BaseModel
         ->where('id', "=", $id)
         ->update(['status' => "canceled"]);
      }
+     
+     public static function getById($id){
+
+         $schedule = \DB::table('schedule')
+         ->where('id', '=' ,$id)->get();
+        
+       return $schedule; 
+   }
+
+   public static function getAll(){
+
+         $schedule = \DB::table('schedule')->get();
+        
+       return $schedule; 
+   }
 
 }
