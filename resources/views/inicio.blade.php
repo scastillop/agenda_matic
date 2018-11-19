@@ -349,7 +349,7 @@
 					</div>
 				</div>
 				<div class="modal-footer">
-					<button type="button" class="btn btn-success" id="modal_ver_aceptar">Volver</button>
+					<button type="button" class="btn btn-success" data-dismiss="modal" id="modal_ver_aceptar">Volver</button>
 				</div>
 			</div>
 		</div>

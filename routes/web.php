@@ -18,11 +18,10 @@ Route::post('/schedules/cancelById', 'ScheduleController@cancelById');
 //rooms
 Route::post('/rooms/getByRange', 'RoomController@getByRange');
 Route::post('/rooms/getById', 'RoomController@getById');
+Route::post('/rooms/getAll', 'RoomController@getAll');
 //users
 Route::post('/users/getByRange', 'UserController@getByRange');
 Route::post('/users/getFreeTime', 'UserController@getFreeTime');
 Route::post('/users/getByScheduleId', 'UserController@getByScheduleId');
-Route::post('/rooms/getById', 'RoomController@getById');
-Route::post('/rooms/getAll', 'RoomController@getAll');
-
+//mail
 Route::post('/mail/send', 'MailController@send');

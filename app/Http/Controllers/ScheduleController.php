@@ -69,12 +69,12 @@ class ScheduleController extends Controller
         $schedule ->owner_id = '1';
         $schedule ->type = 'meeting';
         $schedule ->status = 'scheduled';
-        $schedule ->rejectable = $request['rechazable'];
-        
+        $schedule ->rejectable = $request['rechazable'];        
         $schedule ->details = isset($request['detalles'])? $request['detalles'] : "";
         $schedule ->title = $request['titulo'];
         $schedule ->all_day = $request['todo_el_dia'];
         $schedule ->room_id = $request['ubicacion'];
+
         $schedule_id = Schedule::saveSchedule($schedule);
 
         foreach ($request['invitados'] as $user_id) {
@@ -143,9 +143,8 @@ class ScheduleController extends Controller
         return "1";
     }
     
-        public function getById(Request $request)
-    {
-
+    public function getById(Request $request)
+    
         $request->validate([
             'id' => 'required|integer'
         ]);
@@ -157,5 +156,4 @@ class ScheduleController extends Controller
     {
        return Schedule::getAll();
     }
-
 }

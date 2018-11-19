@@ -34,17 +34,12 @@ class Room extends Model
    }
 
    public static function getById($id){
-
-         $rooms = \DB::table('rooms')
-         ->where('id', '=' ,$id)->get();
-        
-       return $rooms; 
+       $room = \DB::table('rooms')->where('id', $id)->get();
+       return $room;
    }
 
    public static function getAll(){
-
-         $rooms = \DB::table('rooms')->get();
-        
+        $rooms = \DB::table('rooms')->get();
        return $rooms; 
    }
 

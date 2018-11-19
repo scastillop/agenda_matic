@@ -27,5 +27,4 @@ class Guest extends BaseModel
         
        return $guest; 
    }
-
 }
