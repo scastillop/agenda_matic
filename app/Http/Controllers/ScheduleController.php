@@ -136,7 +136,7 @@ class ScheduleController extends Controller
     public function cancelById(Request $request)
     {
         $request->validate([
-            'id' => 'required|integer',
+            'id' => 'required|integer'
         ]);
         Schedule::cancelById($request["id"]);
 
@@ -144,7 +144,7 @@ class ScheduleController extends Controller
     }
     
     public function getById(Request $request)
-    
+    {
         $request->validate([
             'id' => 'required|integer'
         ]);

@@ -19,6 +19,7 @@ class Schedule extends BaseModel
      }
 
      public static function getValid()
+     {
         $schedules = \DB::table('schedules')
         ->where('status', "=", "scheduled")
         ->get();
