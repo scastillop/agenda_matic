@@ -251,8 +251,9 @@ $( document ).ready(function() {
  	$('#modal_agendar_titulo_modal').text('Agendar reunión');
 
  	$('#modal_agendar').modal();
- 	$('#datetimepicker7').datetimepicker({minDate: moment()});
- 	$('#datetimepicker7').datetimepicker({maxDate: null});
+ 	
+ 	$('#datetimepicker7').data("datetimepicker").maxDate(false);
+ 	$('#datetimepicker8').data("datetimepicker").minDate(false);
  })
 
  $('.modal_agendar_form').change(function(){
