@@ -299,6 +299,10 @@ $( document ).ready(function() {
 	   		data:data,
 	   		success:function(rooms){
 	   			$('#modal_agendar_ubicacion').empty();
+	   			$('#modal_agendar_ubicacion').append($('<option>', {
+				    value: 0,
+				    text: "Externa"
+				}));
 	   			$.each(rooms, function( index, room ) {
 	   				if(room.reuniones>0){
 	   					var disponible = false;

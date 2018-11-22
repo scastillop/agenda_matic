@@ -13,7 +13,7 @@ class ChangeRoomIdToScheduleTable extends Migration
      */
     public function up()
     {
-        DB::statement('ALTER TABLE `schedules` MODIFY `room_id` INTEGER UNSIGNED NULL;');
+        DB::statement('ALTER TABLE schedules ALTER COLUMN room_id INTEGER NULL;');
     }
 
     /**
@@ -23,6 +23,6 @@ class ChangeRoomIdToScheduleTable extends Migration
      */
     public function down()
     {
-        DB::statement('ALTER TABLE `schedules` MODIFY `room_id` INTEGER UNSIGNED NOT NULL;');
+        DB::statement('ALTER TABLE schedules ALTER COLUMN room_id INTEGER NOT NULL;');
     }
 }

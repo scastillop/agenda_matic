@@ -13,7 +13,7 @@ class ChangeDetailsToSchedulesTable extends Migration
      */
     public function up()
     {
-        DB::statement('ALTER TABLE `schedules` MODIFY `details` TEXT NULL;');
+        DB::statement('ALTER TABLE schedules ALTER COLUMN details TEXT NULL;');
     }
 
     /**
@@ -23,6 +23,6 @@ class ChangeDetailsToSchedulesTable extends Migration
      */
     public function down()
     {
-        DB::statement('ALTER TABLE `schedules` MODIFY `details` TEXT NOT NULL;');
+        DB::statement('ALTER TABLE schedules ALTER COLUMN details TEXT NOT NULL;');
     }
 }

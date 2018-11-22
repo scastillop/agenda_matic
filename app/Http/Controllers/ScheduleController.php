@@ -44,7 +44,7 @@ class ScheduleController extends Controller
             'final' => 'required|date',
             'titulo' => 'required|string',
             'todo_el_dia' => 'boolean',
-            'ubicacion' => 'integer|min:1',
+            'ubicacion' => 'integer|min:0',
             "invitados"    => "required|array|min:1",
             "invitados.*"  => "integer|min:1"
         ]);
@@ -73,8 +73,9 @@ class ScheduleController extends Controller
         $schedule ->details = isset($request['detalles'])? $request['detalles'] : "";
         $schedule ->title = $request['titulo'];
         $schedule ->all_day = $request['todo_el_dia'];
-        $schedule ->room_id = $request['ubicacion'];
-
+        if($request['ubicacion']){
+            $schedule ->room_id = $request['ubicacion'];    
+        }
         $schedule_id = Schedule::saveSchedule($schedule);
 
         foreach ($request['invitados'] as $user_id) {
