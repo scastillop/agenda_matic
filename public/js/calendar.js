@@ -2,6 +2,15 @@ $( document ).ready(function() {
 	$('#calendar').fullCalendar({
 		eventLimit: true,
 		timeFormat: 'HH:mm',
+		header: { center: 'month,agendaWeek,agendaDay' },
+		views: {
+			agendaWeek: {
+			  	titleFormat: 'DD/MM'
+			},
+			agendaDay: {
+			  	titleFormat: 'DD/MM/YYYY'
+			}
+		},
 		eventClick: function (data, event, view) {
 			var currentLocation = window.location;
 			//console.log(data);
@@ -80,7 +89,10 @@ $( document ).ready(function() {
 			   			}
 			   		},
 			   		error: function(e){
-			   			console.log(e); 		
+			   			console.log(e);
+			   			if(e.status==419){
+			   				location.reload();
+			   			}		
 			   		}
 			   	});
 			 	});
@@ -91,7 +103,7 @@ $( document ).ready(function() {
 				$('.popover').popover('hide');
 				$('#modal_ver_inicio').text(data.start.format("DD/MM/YYYY HH:mm"));
 			 	$('#modal_ver_termino').text(data.end.format("DD/MM/YYYY HH:mm"));
-			 	if(data.detalles.trim()!=""){
+			 	if(data.detalles&&data.detalles.trim()!=""){
 			 		$( '#modal_ver_detalles').text(data.detalles);	
 			 	}else{
 			 		$( '#modal_ver_detalles').text("Este evento no tiene detalles adicionales.");
@@ -116,7 +128,10 @@ $( document ).ready(function() {
 			   			$('#modal_ver_ubicacion').append(room[0].name);
 			   		},
 			   		error: function(e){
-			   			console.log(e); 		
+			   			console.log(e.status);
+			   			if(e.status==419){
+			   				location.reload();
+			   			}		
 			   		}
 			   	});
 			 	$.ajax({
@@ -131,7 +146,11 @@ $( document ).ready(function() {
 			   			});
 			   		},
 			   		error: function(e){
-			   			console.log(e); 		
+			   			console.log(e.status);
+			   			console.log(e);
+			   			if(e.status==419){
+			   				location.reload();
+			   			}			
 			   		}
 			   	});
 			 	$('#modal_ver').modal();
@@ -196,7 +215,6 @@ $( document ).ready(function() {
        	type:'GET',
        	url:currentLocation+'schedules',
        	success:function(schedules){
-       		//console.log(schedules);
        		var events = [];
 			schedules.forEach(function(schedule) {
 				if($.fullCalendar.moment(new Date())>$.fullCalendar.moment(schedule.end)){
@@ -231,6 +249,9 @@ $( document ).ready(function() {
        	},
        	error:function(e){
        		console.log(e);
+       		if(e.status==419){
+   				location.reload();
+   			}	
        	}
     });
  }
@@ -348,7 +369,11 @@ $( document ).ready(function() {
 			   	});
 	   		},
 	   		error: function(e){
-	   			console.log(e);   		}
+	   			console.log(e);
+	   			if(e.status==419){
+			   		location.reload();
+				}	
+			}
 		});
  	}
  };
@@ -394,7 +419,10 @@ $(document).on('click','#modal_ocupados_aceptar', function () {
 			}
 		},
 		error: function(e){
-			console.log(e); 		
+			console.log(e);
+			if(e.status==419){
+   				location.reload();
+   			}	 		
 		}
 	});
 });
@@ -445,7 +473,10 @@ $(document).on('click','#modal_ocupados_buscar', function () {
 		});
 		},
 		error: function(e){
-			console.log(e); 		
+			console.log(e);
+			if(e.status==419){
+   				location.reload();
+   			}			
 		}
 	});
 });
@@ -497,7 +528,10 @@ $("#modal_agendar_aceptar").click(function(){
 		   			}
 		   		},
 		   		error: function(e){
-		   			console.log(e); 		
+		   			console.log(e);
+		   			if(e.status==419){
+		   				location.reload();
+		   			}			
 		   		}
 		   	});
  		}

@@ -27,6 +27,18 @@ class Schedule extends BaseModel
         return $schedules;
      }
 
+     public static function getValidById($user_id)
+     {
+        $schedules = \DB::table('schedules')
+        ->leftJoin('guests', 'schedules.id', '=', 'guests.schedule_id')
+        ->where('schedules.status', "=", "scheduled")
+        ->where('schedules.owner_id', "=", $user_id)
+        ->orWhere('schedules.status', "=", "scheduled")
+        ->where('guests.user_id', "=", $user_id)
+        ->get();
+        return $schedules;
+     }
+
      public static function cancelById($id){
         $schedules = \DB::table('schedules')
         ->where('id', "=", $id)

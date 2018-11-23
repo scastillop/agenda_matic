@@ -7,7 +7,7 @@ use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Http\Request;
 
-class User extends Authenticatable
+class User extends BaseAuthenticatable
 {
     use Notifiable;
 
