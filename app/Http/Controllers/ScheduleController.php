@@ -6,6 +6,7 @@ use App\Schedule;
 use App\Guest;
 use Illuminate\Http\Request;
 use Carbon\Carbon;
+use Auth;
 
 class ScheduleController extends Controller
 {
@@ -16,7 +17,7 @@ class ScheduleController extends Controller
      */
     public function index()
     {
-        $shedules = Schedule::getValid();
+        $shedules = Schedule::getValidById(Auth::id());
         return $shedules;
     }
 
@@ -66,7 +67,7 @@ class ScheduleController extends Controller
             $schedule ->end = $request['final'];
         }
         
-        $schedule ->owner_id = '1';
+        $schedule ->owner_id = Auth::id();
         $schedule ->type = 'meeting';
         $schedule ->status = 'scheduled';
         $schedule ->rejectable = $request['rechazable'];        

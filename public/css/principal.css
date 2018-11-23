@@ -288,3 +288,23 @@ option:disabled{
 .modal_agendar_recomendados_seleccionar:hover{
 	color:#00984B;
 }
+
+.navbar{
+	background-color: #00b259;
+	border-color: #00b259 !important;
+	color: white;	
+	padding: 20px;
+}
+.navbar-light .navbar-nav .nav-link{
+	color: white;
+}
+.navbar-toggler-icon{
+	color: white;
+}
+
+#div_titulo a{
+	color:white;
+}
+.dropdown-item {
+	color: #212529!important;
+}
