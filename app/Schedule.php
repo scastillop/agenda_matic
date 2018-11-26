@@ -35,6 +35,7 @@ class Schedule extends BaseModel
         ->where('schedules.owner_id', "=", $user_id)
         ->orWhere('schedules.status', "=", "scheduled")
         ->where('guests.user_id', "=", $user_id)
+        ->groupBy('schedules.id')
         ->get();
         return $schedules;
      }
