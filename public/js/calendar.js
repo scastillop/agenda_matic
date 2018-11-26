@@ -1,11 +1,19 @@
 $( document ).ready(function() {
+	if ($(window).width() < 514){
+        $('#calendar').fullCalendar('option', 'aspectRatio', 0.7);
+    } else {
+        $('#calendar').fullCalendar('option', 'aspectRatio', 1.35);
+    }
 	$('#calendar').fullCalendar({
 		eventLimit: true,
 		timeFormat: 'HH:mm',
-		header: { center: 'month,agendaWeek,agendaDay' },
+		header: { right: 'today prev,next'},
+		footer: { center: 'month,agendaWeek,agendaDay'},
+		aspectRatio: 1,
 		views: {
 			agendaWeek: {
-			  	titleFormat: 'DD/MM'
+			  	titleFormat: 'DD/MM',
+			  	columnHeaderFormat: 'ddd D'
 			},
 			agendaDay: {
 			  	titleFormat: 'DD/MM/YYYY'
@@ -207,6 +215,14 @@ $( document ).ready(function() {
         $('#datetimepicker5').datetimepicker('maxDate', e.date);
     });
 	setInterval(fillCalendar(), 12000);
+});
+
+$( window ).resize(function() {
+  	if ($(window).width() < 514){
+        $('#calendar').fullCalendar('option', 'aspectRatio', 0.7);
+    } else {
+        $('#calendar').fullCalendar('option', 'aspectRatio', 1.35);
+    }
 });
 
  function fillCalendar(){
