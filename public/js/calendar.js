@@ -76,8 +76,24 @@ $( document ).ready(function() {
 			 });
 			$('.cancelar').click(function(){
 				$('.popover').popover('hide');
-				$('#modal_cancelar_body').html('Realmente desea cancelar su asistencia a la reunión "<strong>'+data.title+'</strong>" del dia '+data.start.format("DD-MM-YYYY")+' a las '+data.start.format("HH:mm")+'?');
-			 	$('#modal_cancelar').modal();
+				$('#modal_cancelar_body').html('Realmente desea rechazar su asistencia a la reunión "<strong>'+data.title+'</strong>" del dia '+data.start.format("DD-MM-YYYY")+' a las '+data.start.format("HH:mm")+'?');
+			 	$('#modal_cancelar').modal().click(function(){
+			 		$.ajax({
+					url:currentLocation+'guests/rejectById',
+			   		type:'POST',
+			   		headers: {'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')},
+			   		data:{id: data.id, user_id: 10},			   		
+			   		success:function(success){
+			   			if(success){
+			   				fillCalendar();
+			   				$('#modal_cancelar_exito').modal();
+			   			}
+			   		},
+			   		error: function(e){
+			   			console.log(e); 		
+			   		}
+			   	});
+			 	});
 			});
 
 			$('.eliminar').click(function(){
@@ -105,7 +121,6 @@ $( document ).ready(function() {
 			   	});
 			 	});
 			});
-
 			$('.ver').click(function(){
 				$( '#modal_ver_titulo' ).text(data.title);
 				$('.popover').popover('hide');
@@ -240,6 +255,11 @@ $( window ).resize(function() {
 				}else{
 					color = '#FF4000';
 				}
+
+				if(schedule.type == 'off'){
+					color = '#dddddd';
+				}
+
 				var allDay = schedule.all_day=="1" ? true : false;
 				var rechazable = schedule.rejectable=="1" ? true : false;				
 				event={
@@ -541,6 +561,30 @@ $("#modal_agendar_aceptar").click(function(){
 		   				fillCalendar();
 		   				$('#modal_agendar').modal('hide');
 		   				$('#modal_exito').modal('show');
+
+		   				data={to_email : "jonathan.arce.93@gmail.com", 
+		   						nameUser: "Jonathan",
+	 							subject: "Agendamiento reunion",
+	 							ownerUser: "Jorge",
+	 							dateSchedule: "28-10-2018"
+	 							}
+
+		   				$.ajax({
+							url:currentLocation+'mail/send',
+					   		type:'POST',
+					   		headers: {'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')},
+					   		data:data,
+					   		success:function(status){
+					   			if(status){
+					   				console.log("ok");
+					   			}
+					   		},
+					   		error: function(e){
+					   			console.log(e); 		
+					   		}
+		   				});
+
+
 		   			}
 		   		},
 		   		error: function(e){
@@ -560,12 +604,65 @@ $("#modal_agendar_aceptar").click(function(){
 
 $('#bloquear').click(function(){
  	$('.modal_bloquear_rango').val("");
- 	$( "#modal_bloquear_aceptar" ).prop("disabled", true);
+ 	$( "#modal_bloquear_aceptar" ).prop("disabled", false);
  	//$( ".modal_bloquear_fecha" ).prop("disabled", true);
  	//$( ".modal_bloquear_fecha" ).empty();
  	$( '#modal_bloquear_titulo' ).val("");
  	$( '#modal_bloquear_detalles' ).val("");
  	$( '#modal_bloquear_todo_el_dia' ).prop( "checked", false );
 
+ 	$('#datetimepicker5').data("datetimepicker").maxDate(false);
+ 	$('#datetimepicker6').data("datetimepicker").minDate(false);
+
  	$('#modal_bloquear').modal();
 });
+
+
+$("#modal_bloquear_aceptar").click(function(){
+	var currentLocation = window.location;
+	var titulo = $.trim($('#modal_bloquear_titulo').val());
+ 	var inicio = moment($.trim($('#modal_bloquear_inicio').val()), 'DD/MM/YYYY HH:mm').format('YYYYMMDD HH:mm');
+ 	var final = moment($.trim($('#modal_bloquear_termino').val()), 'DD/MM/YYYY HH:mm').format('YYYYMMDD HH:mm');
+ 	var todo_el_dia = $('#modal_bloquear_todo_el_dia').is(':checked')? 1 : 0;;
+ 	var detalles = $.trim($('#modal_bloquear_detalles').val());
+
+ 	if(titulo!=""&&inicio!=""&&final!=""){
+ 		$( "#modal_bloquear_aceptar" ).prop("disabled", false);
+
+ 		data={
+ 			id_guest : ["10"], 
+ 			titulo: titulo,
+ 			inicio: inicio,
+ 			final: final,
+ 			todo_el_dia: todo_el_dia,
+ 			detalles: detalles
+ 		}
+
+ 		$.ajax({
+				url:currentLocation+'schedules/storeOff',
+		   		type:'POST',
+		   		headers: {'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')},
+		   		data:data,
+		   		success:function(status){
+			   		console.log(status);	
+	   			if(status == 1){
+	   				fillCalendar();
+	   				$('#modal_bloquear').modal('hide');
+	   				$('#modal_bloquear_exito').modal('show');
+	   			}else{
+	   				$('#modal_bloquear').modal('hide');
+		   			$( "#modal_bloquear_atencion" ).modal();
+
+	   			}
+		   		},
+		   		error: function(e){
+		   			console.log(e); 		
+		   		}
+		   	});
+ 	
+
+ 	}else{
+ 		$( "#modal_agendar_aceptar" ).prop("disabled", true);
+ 	}
+});
+

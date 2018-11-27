@@ -97,4 +97,14 @@ class GuestController extends Controller
     {
        return Guest::getAll();
     }
+
+     public function rejectById(Request $request)
+    {
+        $request->validate([
+            'id' => 'required|integer',
+            'user_id' => 'required|integer'
+        ]);
+
+        return  Guest::rejectById($request);
+    }
 }
