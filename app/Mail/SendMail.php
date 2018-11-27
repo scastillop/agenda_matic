@@ -19,12 +19,14 @@ class SendMail extends Mailable
 
 
     public $sub;
-    public $msg;
+    public $msgHeader;
+    public $msgBody;
 
-    public function __construct($subject, $message)
+    public function __construct($subject, $messageHead, $messageBody)
     {
         $this->sub = $subject;
-        $this->msg = $message;
+        $this->msgHeader = $messageHead;
+        $this->msgBody = $messageBody;
             }
 
     /**
@@ -35,8 +37,9 @@ class SendMail extends Mailable
     public function build()
     {
         $e_sub = $this -> sub;
-        $e_msg = $this -> msg;
+        $e_msgHeader = $this -> msgHeader;
+        $e_msgeBody = $this -> msgBody;
 
-        return $this->view('mails.sendemail', compact("e_msg"))->subject($e_sub);
+        return $this->view('mails.sendemail', compact("e_msgHeader", "e_msgeBody"))->subject($e_sub);
     }
 }

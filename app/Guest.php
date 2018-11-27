@@ -3,6 +3,7 @@
 namespace App;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Http\Request;
 
 class Guest extends BaseModel
 {
@@ -15,7 +16,7 @@ class Guest extends BaseModel
 
     public static function getById($id){
 
-         $guest = \DB::table('guest')
+         $guest = \DB::table('guests')
          ->where('id', '=' ,$id)->get();
         
        return $guest; 
@@ -23,8 +24,19 @@ class Guest extends BaseModel
 
    public static function getAll(){
 
-         $guest = \DB::table('guest')->get();
+         $guest = \DB::table('guests')->get();
         
        return $guest; 
    }
+
+   public static function rejectById(Request $request){
+
+        $guest = \DB::table('guests')
+        ->where('guests.schedule_id', $request["id"])
+        ->where ('guests.user_id' , $request["user_id"])
+        ->update(['guests.rejected' => 1]);
+        
+        return $guest;
+
+     }
 }

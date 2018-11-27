@@ -7,22 +7,32 @@ use App\Mail\SendMail;
  
 class MailController extends Controller
 {
-    public function send()
+    public function sendSchedule(Request $request)
     {
-	    //$to_name = 'Jota';
-	    $to_subject = 'Test';
-		$to_email = 'jonathan.arce.93@gmail.com';
-		$to_msg = 'Holaaaaaaaaaaaaaaaaa';
-		//$data = array('name'=>"Oe wea", "body" => "Test mail");
+
+    	$messagehead = "Estimado nameUser: ";
+    	$messageScheduleBody = "El usuario ownerUser, le ha agendado una reunion para el dia dateSchedule.";
+
+    	$request->validate([
+    		'nameUser' => 'required',
+            'subject' => 'required|string', 
+            'to_email' => 'required|string',
+            'ownerUser' => 'required|string',
+            'dateSchedule' => 'required'
+
+        ]);
+
+
+        $messagehead = str_replace('nameUser', $request['nameUser'], $messagehead);
+        $messageScheduleBody = str_replace('ownerUser', $request['ownerUser'], $messageScheduleBody);
+        $messageScheduleBody = str_replace('dateSchedule', $request['dateSchedule'], $messageScheduleBody);
+
+	    $to_subject = $request['subject'];
+		$to_email = $request['to_email'];
+		$to_msg_header = $messagehead;
+		$to_msg_body = $messageScheduleBody;
 	    
-	    Mail::to($to_email)->send(new SendMail($to_subject ,$to_msg ));
-
-		//Mail::send('mails.mail', $data, function($message) use ($to_name, $to_email) {
-//		    $message->to($to_email, $to_name)
-//		            ->subject('Artisans Web Testing Mail');
-//		    $message->from('agendamiento.info@gmail.com','Artisans Web');
-		//});
-
+	    Mail::to($to_email)->send(new SendMail($to_subject ,$to_msg_header, $to_msg_body ));
 		
     }
 }

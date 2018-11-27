@@ -6,8 +6,10 @@
 
 </head>
 <body>
+	<div> <pre>{{$e_msgHeader}}</pre></div>
+
+	<div><p>{{$e_msgeBody}}</p></div>
 	
-	{{$e_msg}}
 
 </body>
 </html>

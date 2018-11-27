@@ -18,6 +18,7 @@ Route::group(['middleware' => ['auth']], function() {
     //shedules
 	Route::resource('schedules', 'ScheduleController');
 	Route::post('/schedules/cancelById', 'ScheduleController@cancelById');
+	Route::post('/schedules/storeOff', 'ScheduleController@storeOff');
 	//rooms
 	Route::post('/rooms/getByRange', 'RoomController@getByRange');
 	Route::post('/rooms/getById', 'RoomController@getById');
@@ -27,8 +28,9 @@ Route::group(['middleware' => ['auth']], function() {
 	Route::post('/users/getFreeTime', 'UserController@getFreeTime');
 	Route::post('/users/getByScheduleId', 'UserController@getByScheduleId');
 	//mail
-	Route::post('/mail/send', 'MailController@send');
+	Route::post('/mail/send', 'MailController@sendSchedule');
+	//guest
+	Route::post('/guests/rejectById', 'GuestController@rejectById');
 });
 //login
 Auth::routes();
-
