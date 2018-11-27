@@ -30,13 +30,13 @@ class Schedule extends BaseModel
      public static function getValidById($user_id)
      {
         $schedules = \DB::table('schedules')
-        ->select(\DB::raw('schedules.title, schedules.id, schedules.created_at, schedules.updated_at, schedules.owner_id, schedules.type, schedules.status, schedules.rejectable, schedules.start, schedules."end", CONVERT( VARCHAR(MAX), schedules.details) as details'))
+        ->select(\DB::raw('schedules.title, schedules.id, schedules.created_at, schedules.updated_at, schedules.owner_id, schedules.type, schedules.status, schedules.rejectable, schedules.start, schedules."end", CONVERT( VARCHAR(MAX), schedules.details) as details, schedules.all_day, schedules.room_id'))
         ->leftJoin('guests', 'schedules.id', '=', 'guests.schedule_id')
         ->where('schedules.status', "=", "scheduled")
         ->where('schedules.owner_id', "=", $user_id)
         ->orWhere('schedules.status', "=", "scheduled")
         ->where('guests.user_id', "=", $user_id)
-        ->groupBy(\DB::raw('schedules.id, schedules.title, schedules.created_at, schedules.updated_at, schedules.owner_id, schedules.type, schedules.status, schedules.rejectable, schedules.start, schedules."end", CONVERT( VARCHAR(MAX), schedules.details)'))
+        ->groupBy(\DB::raw('schedules.id, schedules.title, schedules.created_at, schedules.updated_at, schedules.owner_id, schedules.type, schedules.status, schedules.rejectable, schedules.start, schedules."end", CONVERT( VARCHAR(MAX), schedules.details), schedules.all_day, schedules.room_id'))
         ->get();
         return $schedules;
      }
