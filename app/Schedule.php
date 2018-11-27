@@ -30,12 +30,13 @@ class Schedule extends BaseModel
      public static function getValidById($user_id)
      {
         $schedules = \DB::table('schedules')
+        ->select(\DB::raw('schedules.id, schedules.created_at, schedules.updated_at, schedules.owner_id, schedules.type, schedules.status, schedules.rejectable, schedules.start, schedules."end", CONVERT( VARCHAR(MAX), schedules.details) as details'))
         ->leftJoin('guests', 'schedules.id', '=', 'guests.schedule_id')
         ->where('schedules.status', "=", "scheduled")
         ->where('schedules.owner_id', "=", $user_id)
         ->orWhere('schedules.status', "=", "scheduled")
         ->where('guests.user_id', "=", $user_id)
-        ->groupBy('schedules.id')
+        ->groupBy(\DB::raw('schedules.id, schedules.created_at, schedules.updated_at, schedules.owner_id, schedules.type, schedules.status, schedules.rejectable, schedules.start, schedules."end", CONVERT( VARCHAR(MAX), schedules.details)'))
         ->get();
         return $schedules;
      }
