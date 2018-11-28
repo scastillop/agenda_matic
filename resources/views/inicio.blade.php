@@ -11,7 +11,7 @@
 		<link href="{{ URL::asset('bootstrap-datepicker/css/bootstrap-datepicker.css') }}" rel="stylesheet"></script>
 		<link href="{{ URL::asset('css/principal.css') }}" rel="stylesheet"></script>
 	</head>
-	<body>
+	<body data-id='{{ Auth::id() }}' >
 
 	<div class="container">
 		<div class="row" id="div_titulo">
@@ -500,10 +500,29 @@
 				</div>
 				<div class="modal-footer">
 					<button type="button" class="btn btn-success" id="modal_asistencia_aceptar">Guardar cambios</button>
-					<button type="button" class="btn btn-default" id="modal_asistencia_cancelar">Cancelar</button>
+					<button type="button" class="btn btn-default" data-dismiss="modal" id="modal_asistencia_cancelar">Cancelar</button>
 				</div>
 			</div>
 		</div>
+	</div>
+
+	<div class="modal fade" id="modal_asistencia_exito" tabindex="10" role="dialog" aria-hidden="true">
+	  <div class="modal-dialog modal-dialog-centered" role="document">
+	    <div class="modal-content">
+	      <div class="modal-header">
+	        <h2 class="modal-title">Éxito!</h2>
+	        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+	          <span aria-hidden="true">&times;</span>
+	        </button>
+	      </div>
+	      <div class="modal-body">
+	        La asistencia ha sido registrada satisfactoriamente.
+	      </div>
+	      <div class="modal-footer">
+	      	<button type="button" class="btn btn-success" data-dismiss="modal" id="modal_exito_volver">Volver</button>
+	      </div>
+	    </div>
+	  </div>
 	</div>
 
 	<script src="https://code.jquery.com/jquery-3.3.1.min.js" integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8=" crossorigin="anonymous"></script>

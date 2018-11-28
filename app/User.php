@@ -113,7 +113,7 @@ class User extends BaseAuthenticatable
         ->join('guests', 'users.id', '=', 'guests.user_id')
         ->join('schedules', 'schedules.id', '=', 'guests.schedule_id')
         ->where('schedules.id', "=", $id)
-        ->select('users.id', 'users.name', 'users.email')
+        ->select('users.id', 'users.name', 'users.email', 'guests.concurred')
         ->get();
         return $users;
     }

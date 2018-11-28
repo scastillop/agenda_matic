@@ -34,6 +34,7 @@ Route::group(['middleware' => ['auth']], function() {
 	Route::post('/mail/send', 'MailController@sendSchedule');
 	//guest
 	Route::post('/guests/rejectById', 'GuestController@rejectById');
+	Route::post('/guests/setAssistance', 'GuestController@setAssistance');
 });
 //login
 Auth::routes();

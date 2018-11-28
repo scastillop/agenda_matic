@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Guest;
+use App\Schedule;
 use Illuminate\Http\Request;
 
 class GuestController extends Controller
@@ -98,7 +99,7 @@ class GuestController extends Controller
        return Guest::getAll();
     }
 
-     public function rejectById(Request $request)
+    public function rejectById(Request $request)
     {
         $request->validate([
             'id' => 'required|integer',
@@ -106,5 +107,23 @@ class GuestController extends Controller
         ]);
 
         return  Guest::rejectById($request);
+    }
+
+    public function setAssistance(Request $request)
+    {
+        $request->validate([
+            'id' => 'required|integer',
+            "asistentes"    => "array",
+            "asistentes.*"  => "integer|min:1"
+        ]);
+        Guest::setAllNoConcurredById($request["id"]);
+        if($request["asistentes"]){
+            foreach ($request["asistentes"] as $idInvitado){
+                Guest::setConcurredById($idInvitado, $request["id"]);
+            }
+        }
+        
+        Schedule::setRegisteredAssistanceById($request["id"]);
+        return 1;
     }
 }
