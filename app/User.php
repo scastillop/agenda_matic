@@ -55,6 +55,34 @@ class User extends BaseAuthenticatable
         return $users;
     }
 
+    public static function getByRangeAvoidId(Request $request){
+        $users = \DB::table('users')
+        ->leftJoin('guests', function($join) use ($request){
+            $join->on('users.id', '=', 'guests.user_id');
+        })
+        ->leftJoin('schedules', function($join) use ($request){
+            $join->on('schedules.id', '=', 'guests.schedule_id')
+            ->where('schedules.status', '=', 'scheduled')
+            ->where('schedules.id', '!=', $request["id"])
+            ->whereBetween('schedules.start', array($request["inicio"], $request["final"]));
+            $join->orOn('schedules.id', '=', 'guests.schedule_id')
+            ->where('schedules.status', '=', 'scheduled')
+            ->where('schedules.id', '!=', $request["id"])
+            ->WhereBetween('schedules.end', array($request["inicio"], $request["final"]));
+            $join->orOn('schedules.id', '=', 'guests.schedule_id')
+            ->where('schedules.status', '=', 'scheduled')
+            ->where('schedules.id', '!=', $request["id"])
+            ->whereRaw("? between [schedules].[start] and [schedules].[end]", $request["inicio"]);
+            $join->orOn('schedules.id', '=', 'guests.schedule_id')
+            ->where('schedules.status', '=', 'scheduled')
+            ->where('schedules.id', '!=', $request["id"])
+            ->whereRaw("? between [schedules].[start] and [schedules].[end]", $request["final"]); 
+        })
+        ->select('users.id', 'users.name', \DB::raw('count(schedules.id) AS reuniones'))
+        ->groupBy('users.id','users.name')->get();
+        return $users;
+    }
+
     public static function getByRangeAndId($start, $end, $guests){
         $users = \DB::table('users')
         ->leftJoin('guests', function($join) use ($start, $end, $guests){
@@ -85,6 +113,7 @@ class User extends BaseAuthenticatable
         ->join('guests', 'users.id', '=', 'guests.user_id')
         ->join('schedules', 'schedules.id', '=', 'guests.schedule_id')
         ->where('schedules.id', "=", $id)
+        ->select('users.id', 'users.name', 'users.email')
         ->get();
         return $users;
     }

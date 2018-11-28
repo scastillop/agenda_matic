@@ -1,9 +1,4 @@
 $( document ).ready(function() {
-	if ($(window).width() < 514){
-        $('#calendar').fullCalendar('option', 'aspectRatio', 0.7);
-    } else {
-        $('#calendar').fullCalendar('option', 'aspectRatio', 1.35);
-    }
 	$('#calendar').fullCalendar({
 		eventLimit: true,
 		timeFormat: 'HH:mm',
@@ -70,9 +65,13 @@ $( document ).ready(function() {
 			 	}
 			 	
 			 	$('#modal_agendar_aceptar').data('id_schedule', data.id);
+			 	$('#modal_agendar_aceptar').data('id_room', data.sala);
 			 	$('#modal_agendar_aceptar').text('Guardar cambios');
 			 	$('#modal_agendar_titulo_modal').text('Editar reunión');
 			 	$('#modal_agendar').modal();
+			 	verificarHora();
+			 	$("#modal_agendar_aceptar" ).prop("disabled", false);
+			 	$( ".modal_agendar_fecha" ).prop("disabled", false);
 			 });
 			$('.cancelar').click(function(){
 				$('.popover').popover('hide');
@@ -169,7 +168,8 @@ $( document ).ready(function() {
 			 	$('#modal_asistencia').modal();
 			});
         }
-	})
+	});
+	
 	fillCalendar();
 	$('#datetimepicker7').datetimepicker({
 		icons: {
@@ -262,6 +262,11 @@ $( window ).resize(function() {
 			});
 			$('#calendar').fullCalendar('removeEvents');
 			$('#calendar').fullCalendar('addEventSource', events);
+			if ($(window).width() < 514){
+		        $('#calendar').fullCalendar('option', 'aspectRatio', 0.7);
+		    } else {
+		        $('#calendar').fullCalendar('option', 'aspectRatio', 1.35);
+		    }
        	},
        	error:function(e){
        		console.log(e);
@@ -284,6 +289,7 @@ $( window ).resize(function() {
  	$( '#modal_agendar_todo_el_dia' ).prop( "checked", false );
  	
  	$('#modal_agendar_aceptar').data('id_schedule', '0');
+ 	$('#modal_agendar_aceptar').data('id_room', '0');
  	$('#modal_agendar_aceptar').text('Agendar reunión');
  	$('#modal_agendar_titulo_modal').text('Agendar reunión');
 
@@ -328,9 +334,14 @@ $( window ).resize(function() {
  		var inicio = moment(inicio, 'DD/MM/YYYY HH:mm').format('YYYYMMDD HH:mm');
  		var final = moment(final, 'DD/MM/YYYY HH:mm').format('YYYYMMDD HH:mm');
  		var currentLocation = window.location;
- 		var data={inicio:inicio, final:final};
+ 		var data={inicio:inicio, final:final, id: $("#modal_agendar_aceptar").data("id_schedule")};
+ 		if(data.id>0){
+ 			var url="getByRangeAvoidId"
+ 		}else{
+ 			var url="getByRange"
+ 		}
 	 	$.ajax({
-			url:currentLocation+'rooms/getByRange',
+			url:currentLocation+"rooms/"+url,
 	   		type:'POST',
 	   		headers: {'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')},
 	   		data:data,
@@ -352,13 +363,16 @@ $( window ).resize(function() {
 					    disabled: !disponible
 					}));
 				});
+	   			if($("#modal_agendar_aceptar").data("id_room")>0){
+	   				$("#modal_agendar_ubicacion").val($("#modal_agendar_aceptar").data("id_room")).prop('selected', true);
+	   			}
 				var salas =$.map($('#modal_agendar_ubicacion option'), function(element) {return element.value;});
 				if(salas.length>0){
 					$( "#modal_agendar_ubicacion" ).prop("disabled", false);
 				}
 				validarLLenado();
 				$.ajax({
-					url:currentLocation+'users/getByRange',
+					url:currentLocation+'users/'+url,
 			   		type:'POST',
 			   		headers: {'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')},
 			   		data:data,
@@ -378,7 +392,38 @@ $( window ).resize(function() {
 							}));
 						});
 						$( ".modal_agendar_fecha" ).prop("disabled", false);
-						validarLLenado();
+						if(data.id>0){
+							$.ajax({
+								url:currentLocation+'users/getByScheduleId',
+						   		type:'POST',
+						   		headers: {'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')},
+						   		data:{id: data.id},
+						   		success:function(users){
+						   			users.forEach(function(user){
+						   				$.each($('#modal_agendar_usuarios option'), function(index, opcion){
+						   					if($(opcion).val()==user.id){
+						   						$('#modal_agendar_invitados').append('<option class="'+$(opcion).attr('class')+'" value="'+$(opcion).val()+'">'+$(opcion).text()+'</option>');
+						   						$(opcion).remove();
+						   						ordernar_listas();
+						   					}
+						   				});
+						   			});
+						   			validarLLenado();
+						   		},
+						   		error: function(e){
+						   			console.log(e.status);
+						   			console.log(e);
+						   			if(e.status==419){
+						   				location.reload();
+						   			}			
+						   		}
+						   	});
+						}else{
+							validarLLenado();
+						}
+
+
+						
 			   		},
 			   		error: function(e){
 			   			console.log(e); 		}
@@ -518,7 +563,8 @@ $("#modal_agendar_aceptar").click(function(){
  			rechazable: rechazable,
  			todo_el_dia: todo_el_dia,
  			detalles: detalles,
- 			invitados: invitados
+ 			invitados: invitados,
+ 			id: $("#modal_agendar_aceptar").data("id_schedule")
  		}
  		var hayOcupados=false;
  		$.each(invitadosOptions, function( index, invitado ) {
@@ -526,13 +572,18 @@ $("#modal_agendar_aceptar").click(function(){
 				hayOcupados=true;
  			}
  		});
+ 		if(data.id>0){
+			var url="schedules/edit";
+ 		}else{
+ 			var url="schedules";
+ 		}
  		if(hayOcupados){
  			$('#modal_ocupados').modal({backdrop: 'static', keyboard: false});
  			$('#modal_agendar').modal('hide');
  			$('#modal_ocupados').modal('show');
  		}else{
  			$.ajax({
-				url:currentLocation+'schedules',
+				url:currentLocation+url,
 		   		type:'POST',
 		   		headers: {'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')},
 		   		data:data,

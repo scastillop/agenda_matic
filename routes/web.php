@@ -18,12 +18,15 @@ Route::group(['middleware' => ['auth']], function() {
     //shedules
 	Route::resource('schedules', 'ScheduleController');
 	Route::post('/schedules/cancelById', 'ScheduleController@cancelById');
+	Route::post('/schedules/edit', 'ScheduleController@edit');
 	//rooms
 	Route::post('/rooms/getByRange', 'RoomController@getByRange');
+	Route::post('/rooms/getByRangeAvoidId', 'RoomController@getByRangeAvoidId');
 	Route::post('/rooms/getById', 'RoomController@getById');
 	Route::post('/rooms/getAll', 'RoomController@getAll');
 	//users
 	Route::post('/users/getByRange', 'UserController@getByRange');
+	Route::post('/users/getByRangeAvoidId', 'UserController@getByRangeAvoidId');
 	Route::post('/users/getFreeTime', 'UserController@getFreeTime');
 	Route::post('/users/getByScheduleId', 'UserController@getByScheduleId');
 	//mail
