@@ -91,6 +91,12 @@ class ScheduleController extends Controller
         return 1;
     }
 
+    public function edit(Request $request)
+    {   
+        $this->cancelById($request);
+        $this->store($request);
+        return 1;
+    }
     /**
      * Display the specified resource.
      *
@@ -98,17 +104,6 @@ class ScheduleController extends Controller
      * @return \Illuminate\Http\Response
      */
     public function show(Schedule $schedule)
-    {
-        //
-    }
-
-    /**
-     * Show the form for editing the specified resource.
-     *
-     * @param  \App\Schedule  $schedule
-     * @return \Illuminate\Http\Response
-     */
-    public function edit(Schedule $schedule)
     {
         //
     }

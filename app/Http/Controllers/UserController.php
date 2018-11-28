@@ -93,6 +93,16 @@ class UserController extends Controller
         return User::getByRange($request);
     }
 
+    public function getByRangeAvoidId(Request $request)
+    {
+        $request->validate([
+            'inicio' => 'required|date',
+            'final' => 'required|date',
+            'id' => 'required|integer'
+        ]);
+        return User::getByRangeAvoidId($request);
+    }
+
     public function getFreeTime(Request $request)
     {
         $request->validate([
