@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Schedule;
 use App\Guest;
+use App\User;
 use Illuminate\Http\Request;
 use Carbon\Carbon;
 use Auth;
@@ -152,5 +153,53 @@ class ScheduleController extends Controller
     public function getAll()
     {
        return Schedule::getAll();
+    }
+
+
+    public function storeOff(Request $request)
+    {
+        $request->validate([
+            'id_guest' => 'required', 
+            'inicio' => 'required|date',
+            'final' => 'required|date',
+            'titulo' => 'required|string',
+            'todo_el_dia' => 'boolean'
+        ]);
+
+        $schedule = new Schedule();
+
+        if($request["todo_el_dia"]){
+            $start = Carbon::parse($request['inicio']);
+            $start->hour = 0;
+            $start->minute = 0;
+            $schedule ->start = $start->format('Ymd H:i');
+            $end = Carbon::parse($request['final']);
+            $end->addDay();
+            $end->hour = 0;
+            $end->minute = 0;
+            $schedule ->end = $end->format('Ymd H:i');
+        }else{
+            $schedule ->start = $request['inicio'];
+            $schedule ->end = $request['final'];
+        }
+        
+        $schedule ->owner_id = 10;
+        $schedule ->rejectable = 1;
+        $schedule ->type = 'off';
+        $schedule ->status = 'scheduled';       
+        $schedule ->details = isset($request['detalles'])? $request['detalles'] : "";
+        $schedule ->title = $request['titulo'];
+        $schedule ->all_day = $request['todo_el_dia'];
+        $schedule ->room_id = null;
+
+        $quantity = User::getByRangeAndID($request["inicio"],$request["final"],$request["id_guest"]);
+
+        if($quantity[0]->reuniones == 0){
+            Schedule::saveSchedule($schedule);
+            return 1;
+        }else{
+            return 0;
+        }
+        return $quantity;
     }
 }

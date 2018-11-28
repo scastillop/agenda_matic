@@ -237,6 +237,25 @@
 	  </div>
 	</div>
 
+	<div class="modal fade" id="modal_cancelar_exito" tabindex="10" role="dialog" aria-hidden="true">
+	  <div class="modal-dialog modal-dialog-centered" role="document">
+	    <div class="modal-content">
+	      <div class="modal-header">
+	        <h2 class="modal-title">Éxito!</h2>
+	        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+	          <span aria-hidden="true">&times;</span>
+	        </button>
+	      </div>
+	      <div class="modal-body">
+	        La reunión ha sido rechazada satisfactoriamente.
+	      </div>
+	      <div class="modal-footer">
+	      	<button type="button" class="btn btn-success" data-dismiss="modal" id="modal_exito_volver">Volver</button>
+	      </div>
+	    </div>
+	  </div>
+	</div>
+
 	<div class="modal fade" id="modal_cancelar" tabindex="10" role="dialog" aria-hidden="true">
 	  <div class="modal-dialog modal-dialog-centered" role="document">
 	    <div class="modal-content">
@@ -331,6 +350,45 @@
 				</div>
 			</div>
 		</div>
+	</div>
+
+	<div class="modal fade" id="modal_bloquear_atencion" tabindex="10" role="dialog" aria-hidden="true">
+	  <div class="modal-dialog modal-dialog-centered" role="document">
+	    <div class="modal-content">
+	      <div class="modal-header">
+	        <h2 class="modal-title">Atención</h2>
+	        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+	          <span aria-hidden="true">&times;</span>
+	        </button>
+	      </div>
+	      <div class="modal-body text-center" id="modal_bloquear_body">
+	      	Se encontraron reuniones en el rango seleccionado.
+	      	Para poder bloquear no debe tener reuniones pendiente en el rango seleccionado.
+	      </div>
+	      <div class="modal-footer">
+	      	<button type="button" class="btn btn-default" data-dismiss="modal" id="modal_bloquear_volver">Volver</button>
+	      </div>
+	    </div>
+	  </div>
+	</div>
+
+	<div class="modal fade" id="modal_bloquear_exito" tabindex="10" role="dialog" aria-hidden="true">
+	  <div class="modal-dialog modal-dialog-centered" role="document">
+	    <div class="modal-content">
+	      <div class="modal-header">
+	        <h2 class="modal-title">Éxito!</h2>
+	        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+	          <span aria-hidden="true">&times;</span>
+	        </button>
+	      </div>
+	      <div class="modal-body">
+	        Los dias seleccionados han sido bloqueados satisfactoriamente.
+	      </div>
+	      <div class="modal-footer">
+	      	<button type="button" class="btn btn-success" data-dismiss="modal" id="modal_exito_volver">Volver</button>
+	      </div>
+	    </div>
+	  </div>
 	</div>
 
 	<div class="modal" tabindex="-1" role="dialog" id="modal_ver">
