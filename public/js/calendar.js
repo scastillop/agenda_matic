@@ -29,13 +29,16 @@ $( document ).ready(function() {
 			var eliminar = "";
 			var asistencia = "";
 			if(moment().isBefore(data.start.format("YYYY/MM/DD HH:mm"))){
-				editar = '<div class="rounded opciones_reunion p-1 pr-2 pl-2 editar" ver" title="editar evento"><i class="fas fa-pencil-alt"></i></div>';
-				eliminar = '<div class="rounded opciones_reunion p-1 pr-2 pl-2 eliminar" ver" title="eliminar evento"><i class="fas fa-trash-alt"></i></div>';
-				if(data.rechazable){
+				if(data.owner_id==$("body").data("id")){
+					editar = '<div class="rounded opciones_reunion p-1 pr-2 pl-2 editar" ver" title="editar evento"><i class="fas fa-pencil-alt"></i></div>';
+					eliminar = '<div class="rounded opciones_reunion p-1 pr-2 pl-2 eliminar" ver" title="eliminar evento"><i class="fas fa-trash-alt"></i></div>';
+				}else if(data.rechazable){
 					cancelar = '<div class="rounded opciones_reunion p-1 pr-2 pl-2 cancelar" ver" title="cancelar asistencia"><i class="fas fa-ban"></i></div>';	
 				}
 			}else{
-				asistencia = '<div class="rounded opciones_reunion p-1 pr-2 pl-2 asistencia" ver" title="registrar asistencia"><i class="fas fa-clipboard-list"></i></div>';
+				if(!data.asistenciaRegistrada&&data.owner_id==$("body").data("id")&&data.tipo!="off"){
+					asistencia = '<div class="rounded opciones_reunion p-1 pr-2 pl-2 asistencia" ver" title="registrar asistencia"><i class="fas fa-clipboard-list"></i></div>';
+				}
 			}
 
 			var esto= this;
@@ -145,22 +148,28 @@ $( document ).ready(function() {
 			 	}else{
 			 		$( '#modal_ver_rechazable' ).text("No");
 			 	}
-			 	$.ajax({
-					url:currentLocation+'rooms/getById',
-			   		type:'POST',
-			   		headers: {'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')},
-			   		data:{id: data.sala},
-			   		success:function(room){
-			   			$('#modal_ver_ubicacion').empty();
-			   			$('#modal_ver_ubicacion').append(room[0].name);
-			   		},
-			   		error: function(e){
-			   			console.log(e.status);
-			   			if(e.status==419){
-			   				location.reload();
-			   			}		
-			   		}
-			   	});
+			 	if(data.sala){
+			 		$.ajax({
+						url:currentLocation+'rooms/getById',
+				   		type:'POST',
+				   		headers: {'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')},
+				   		data:{id: data.sala},
+				   		success:function(room){
+				   			$('#modal_ver_ubicacion').empty();
+				   			$('#modal_ver_ubicacion').append(room[0].name);
+				   		},
+				   		error: function(e){
+				   			console.log(e);
+				   			if(e.status==419){
+				   				location.reload();
+				   			}		
+				   		}
+				   	});
+			 	}else{
+			 		$('#modal_ver_ubicacion').empty();
+				   	$('#modal_ver_ubicacion').append("Externa");
+			 	}
+			 	
 			 	$.ajax({
 					url:currentLocation+'users/getByScheduleId',
 			   		type:'POST',
@@ -169,7 +178,12 @@ $( document ).ready(function() {
 			   		success:function(users){
 			   			$('#modal_ver_invitados').empty();
 			   			users.forEach(function(user) {
-			   				$('#modal_ver_invitados').append(user.name+"<br>");
+			   				if(data.asistenciaRegistrada){
+			   					var asistio = user.concurred!=0?'<i class="far fa-calendar-check" title="Asistió"></i>':'<i class="far fa-calendar-times" title="No asistió"></i>'	
+			   				}else{
+			   					var asistio = "";
+			   				}
+			   				$('#modal_ver_invitados').append(asistio+"	"+user.name+"<br>");
 			   			});
 			   		},
 			   		error: function(e){
@@ -182,10 +196,29 @@ $( document ).ready(function() {
 			   	});
 			 	$('#modal_ver').modal();
 			});
-
 			$('.asistencia').click(function(){
 				$('.popover').popover('hide');
-			 	$('#modal_asistencia').modal();
+			 	$.ajax({
+					url:currentLocation+'users/getByScheduleId',
+			   		type:'POST',
+			   		headers: {'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')},
+			   		data:{id: data.id},
+			   		success:function(users){
+			   			$('#tabla_asistencia tbody').empty();
+			   			users.forEach(function(user) {
+			   				$('#tabla_asistencia tbody').append('<tr><td class="text-right"><div class="checkbox checkbox-single"><input type="checkbox" class="check_asistencia" data-id="'+user.id+'"><label></label></div></td><td>'+user.name+"</td></tr>");
+			   			});
+			   			$('#modal_asistencia_aceptar').data("id", data.id);
+			   			$('#modal_asistencia').modal();
+			   		},
+			   		error: function(e){
+			   			console.log(e.status);
+			   			console.log(e);
+			   			if(e.status==419){
+			   				location.reload();
+			   			}			
+			   		}
+			   	});
 			});
         }
 	});
@@ -245,6 +278,29 @@ $( window ).resize(function() {
     }
 });
 
+$('#modal_asistencia_aceptar').click(function(){
+	var currentLocation = window.location;
+	var asistentes = $.map($('.check_asistencia:checked'), function(element) {return $(element).data("id");});
+	$.ajax({
+		url:currentLocation+'guests/setAssistance',
+   		type:'POST',
+   		headers: {'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')},
+   		data:{asistentes: asistentes, id: $('#modal_asistencia_aceptar').data("id")},
+   		success:function(response){
+   			fillCalendar();
+   			$('#modal_asistencia').modal('hide');
+   			$('#modal_asistencia_exito').modal();
+   		},
+   		error: function(e){
+   			console.log(e.status);
+   			console.log(e);
+   			if(e.status==419){
+   				location.reload();
+   			}			
+   		}
+   	});
+});
+
  function fillCalendar(){
  	var currentLocation = window.location;
     $.ajax({
@@ -273,6 +329,7 @@ $( window ).resize(function() {
 					start:schedule.start,
 					end:schedule.end,
 					backgroundColor: color,
+					asistenciaRegistrada: schedule.registered_assistance,
 					borderColor: color,
 					allDay: allDay,
 					textColor: 'white',
@@ -281,6 +338,7 @@ $( window ).resize(function() {
 					rechazable: rechazable,
 					sala: schedule.room_id,
 					className:"punteable",
+					owner_id:schedule.owner_id,
 					displayEventTime:!allDay
 				}
 				events.push(event);
