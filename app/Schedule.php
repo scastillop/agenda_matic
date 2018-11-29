@@ -36,6 +36,7 @@ class Schedule extends BaseModel
         ->where('schedules.owner_id', "=", $user_id)
         ->orWhere('schedules.status', "=", "scheduled")
         ->where('guests.user_id', "=", $user_id)
+        ->where('guests.rejected', "=", false)
         ->groupBy(\DB::raw('schedules.id, schedules.title, schedules.created_at, schedules.updated_at, schedules.owner_id, schedules.type, schedules.status, schedules.rejectable, schedules.start, schedules."end", schedules.registered_assistance, CONVERT( VARCHAR(MAX), schedules.details), schedules.all_day, schedules.room_id'))
         ->get();
         return $schedules;
