@@ -43,11 +43,12 @@ class Schedule extends BaseModel
   
     public static function getById($id){
 
-         $schedule = \DB::table('schedule')
+         $schedules = \DB::table('schedules')
          ->where('id', '=' ,$id)->get();
-        
-       return $schedule; 
-    }
+
+         return $schedules; 
+   }
+
 
    public static function getAll(){
 

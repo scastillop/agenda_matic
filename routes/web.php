@@ -18,6 +18,7 @@ Route::group(['middleware' => ['auth']], function() {
     //shedules
 	Route::resource('schedules', 'ScheduleController');
 	Route::post('/schedules/cancelById', 'ScheduleController@cancelById');
+	Route::post('/schedules/cancelIdMail', 'ScheduleController@cancelIdMail');
 	Route::post('/schedules/edit', 'ScheduleController@edit');
 	Route::post('/schedules/storeOff', 'ScheduleController@storeOff');
 	//rooms

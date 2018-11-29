@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Guest;
 use App\Schedule;
 use Illuminate\Http\Request;
+use Auth;
 
 class GuestController extends Controller
 {
@@ -102,11 +103,14 @@ class GuestController extends Controller
     public function rejectById(Request $request)
     {
         $request->validate([
-            'id' => 'required|integer',
-            'user_id' => 'required|integer'
+            'id' => 'required|integer'
         ]);
 
-        return  Guest::rejectById($request);
+        Guest::rejectById($request , Auth::id());
+
+        MailController::sendRejectMsg(Auth::id() ,$request);
+
+        return "1";
     }
 
     public function setAssistance(Request $request)

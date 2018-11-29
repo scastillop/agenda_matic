@@ -8,6 +8,7 @@ use App\User;
 use Illuminate\Http\Request;
 use Carbon\Carbon;
 use Auth;
+use App\Http\Controllers\MailController;
 
 class ScheduleController extends Controller
 {
@@ -88,6 +89,9 @@ class ScheduleController extends Controller
             $guest->rejected = 0;
             Guest::saveGuest($guest);
         }
+
+        MailController::sendScheduleMsg(Auth::id() ,$request['invitados'] , $schedule );
+
         return 1;
     }
 
@@ -140,6 +144,18 @@ class ScheduleController extends Controller
 
         return "1";
     }
+
+    public function cancelIdMail(Request $request)
+    {
+        $request->validate([
+            'id' => 'required|integer'
+        ]);
+        Schedule::cancelById($request["id"]);
+
+        MailController::sendCancelMsg(Auth::id() ,$request['id'] );
+
+        return "1";
+    }
     
     public function getById(Request $request)
     {
@@ -158,8 +174,8 @@ class ScheduleController extends Controller
 
     public function storeOff(Request $request)
     {
+
         $request->validate([
-            'id_guest' => 'required', 
             'inicio' => 'required|date',
             'final' => 'required|date',
             'titulo' => 'required|string',
@@ -183,7 +199,7 @@ class ScheduleController extends Controller
             $schedule ->end = $request['final'];
         }
         
-        $schedule ->owner_id = 10;
+        $schedule ->owner_id = Auth::id();
         $schedule ->rejectable = 1;
         $schedule ->type = 'off';
         $schedule ->status = 'scheduled';       
@@ -192,7 +208,7 @@ class ScheduleController extends Controller
         $schedule ->all_day = $request['todo_el_dia'];
         $schedule ->room_id = null;
 
-        $quantity = User::getByRangeAndID($request["inicio"],$request["final"],$request["id_guest"]);
+        $quantity = User::getByRangeAndID($request["inicio"],$request["final"],array(Auth::id()));
 
         if($quantity[0]->reuniones == 0){
             Schedule::saveSchedule($schedule);
