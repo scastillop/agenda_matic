@@ -277,6 +277,12 @@ option:disabled{
 #tabla_asistencia th{
 	padding:  5px 15px 5px 15px;
 }
+#tabla_estadisticas td{
+	padding: 5px 15px 5px 15px;
+}
+#tabla_estadisticas th{
+	padding:  5px 15px 5px 15px;
+}
 
 .punteable{
     cursor: pointer;
@@ -308,4 +314,8 @@ option:disabled{
 }
 .dropdown-item {
 	color: #212529!important;
+}
+.overscroll{
+	overflow-y: auto;
+	overflow-x: auto;
 }

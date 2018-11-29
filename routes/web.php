@@ -30,6 +30,7 @@ Route::group(['middleware' => ['auth']], function() {
 	Route::post('/users/getByRangeAvoidId', 'UserController@getByRangeAvoidId');
 	Route::post('/users/getFreeTime', 'UserController@getFreeTime');
 	Route::post('/users/getByScheduleId', 'UserController@getByScheduleId');
+	Route::post('/users/statistics', 'UserController@statistics');
 	//mail
 	Route::post('/mail/send', 'MailController@sendSchedule');
 	//guest

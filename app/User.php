@@ -132,4 +132,85 @@ class User extends BaseAuthenticatable
         
        return $users; 
    }
+
+    public static function statisticsAssistance(Request $request){
+        //para los alias considerar la siguiente sintaxis
+        //t = total de reuniones, a = total asistencias, b = total dias bloqueados
+        //de esta forma tenemos que:
+        //tg = tabla guest de uso solo para obtener el total de reuniones
+        //ts = tabla schedules de uso solo para obtener el total de reuniones
+        // y asi sucesivamente...
+        $users = \DB::table('users')
+        ->leftJoin('guests as tg', function($join) use ($request){
+            $join->on('users.id', '=', 'tg.user_id');
+        })
+        ->leftJoin('schedules as ts', function($join) use ($request){
+            $join->on('ts.id', '=', 'tg.schedule_id')
+            ->where('ts.status', '=', 'scheduled')
+            ->where('ts.type', '=', 'meeting')
+            ->whereBetween('ts.start', array($request["inicio"], $request["final"]));
+            $join->orOn('ts.id', '=', 'tg.schedule_id')
+            ->where('ts.status', '=', 'scheduled')
+            ->where('ts.type', '=', 'meeting')
+            ->WhereBetween('ts.end', array($request["inicio"], $request["final"]));
+            $join->orOn('ts.id', '=', 'tg.schedule_id')
+            ->where('ts.status', '=', 'scheduled')
+            ->where('ts.type', '=', 'meeting')
+            ->whereRaw("? between [ts].[start] and [ts].[end]", $request["inicio"]);
+            $join->orOn('ts.id', '=', 'tg.schedule_id')
+            ->where('ts.status', '=', 'scheduled')
+            ->where('ts.type', '=', 'meeting')
+            ->whereRaw("? between [ts].[start] and [ts].[end]", $request["final"]); 
+        })
+        ->leftJoin('guests as sg', function($join) use ($request){
+            $join->on('users.id', '=', 'sg.user_id')
+            ->where('sg.concurred', '=', true);
+        })
+        ->leftJoin('schedules as ss', function($join) use ($request){
+            $join->on('ss.id', '=', 'sg.schedule_id')
+            ->where('ss.status', '=', 'scheduled')
+            ->where('ss.type', '=', 'meeting')
+            ->whereBetween('ss.start', array($request["inicio"], $request["final"]));
+            $join->orOn('ss.id', '=', 'sg.schedule_id')
+            ->where('ss.status', '=', 'scheduled')
+            ->where('ss.type', '=', 'meeting')
+            ->WhereBetween('ss.end', array($request["inicio"], $request["final"]));
+            $join->orOn('ss.id', '=', 'sg.schedule_id')
+            ->where('ss.status', '=', 'scheduled')
+            ->where('ss.type', '=', 'meeting')
+            ->whereRaw("? between [ss].[start] and [ss].[end]", $request["inicio"]);
+            $join->orOn('ss.id', '=', 'sg.schedule_id')
+            ->where('ss.status', '=', 'scheduled')
+            ->where('ss.type', '=', 'meeting')
+            ->whereRaw("? between [ss].[start] and [ss].[end]", $request["final"]); 
+        })
+        ->select('users.id', 'users.name', \DB::raw('count(distinct ts.id) AS reuniones'), \DB::raw('count(distinct ss.id) AS asistencia'))
+        ->groupBy('users.id','users.name')->get();
+        return $users;
+    }
+
+    public static function statisticsBlocks(Request $request){
+        $users = \DB::table('users')
+        ->leftJoin('schedules as bs', function($join) use ($request){
+            $join->on('users.id', '=', 'bs.owner_id')
+            ->where('bs.status', '=', 'scheduled')
+            ->where('bs.type', '=', 'off')
+            ->whereBetween('bs.start', array($request["inicio"], $request["final"]));
+            $join->on('users.id', '=', 'bs.owner_id')
+            ->where('bs.status', '=', 'scheduled')
+            ->where('bs.type', '=', 'off')
+            ->WhereBetween('bs.end', array($request["inicio"], $request["final"]));
+            $join->orOn('users.id', '=', 'bs.owner_id')
+            ->where('bs.status', '=', 'scheduled')
+            ->where('bs.type', '=', 'off')
+            ->whereRaw("? between [bs].[start] and [bs].[end]", $request["inicio"]);
+             $join->orOn('users.id', '=', 'bs.owner_id')
+            ->where('bs.status', '=', 'scheduled')
+            ->where('bs.type', '=', 'off')
+            ->whereRaw("? between [bs].[start] and [bs].[end]", $request["final"]);
+        })
+        ->select('users.id', 'users.name', \DB::raw('count(distinct bs.id) AS bloqueos'), \DB::raw('COALESCE(SUM(DATEDIFF(day, [bs].[start], [bs].[end])),0) AS bloqueados'))
+        ->groupBy('users.id','users.name')->get();
+        return $users;
+    }
 }
