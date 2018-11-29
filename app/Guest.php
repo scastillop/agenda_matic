@@ -29,11 +29,19 @@ class Guest extends BaseModel
        return $guest; 
   }
 
-  public static function rejectById(Request $request){
+   public static function getBySchedule($scheduleId){
+
+         $guest = \DB::table('guests')
+         ->where('schedule_id', '=' ,$scheduleId)->get();
+        
+       return $guest; 
+   }
+
+   public static function rejectById(Request $request,$userId){
 
         $guest = \DB::table('guests')
-        ->where('guests.schedule_id', $request["id"])
-        ->where ('guests.user_id' , $request["user_id"])
+        ->where('guests.schedule_id', $request['id'])
+        ->where ('guests.user_id' , $userId)
         ->update(['guests.rejected' => 1]);
         
         return $guest;
@@ -46,6 +54,7 @@ class Guest extends BaseModel
         ->update(['guests.concurred' => false]);
         return $guest;
   }
+  
   public static function setConcurredById($user_id, $schedule_id){
         $guest = \DB::table('guests')
         ->where('guests.schedule_id',$schedule_id)

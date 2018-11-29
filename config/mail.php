@@ -57,7 +57,7 @@ return [
 
     'from' => [
         'address' => env('MAIL_FROM_ADDRESS', 'agendamiento.info@gmail.com'),
-        'name' => env('MAIL_FROM_NAME', 'Info'),
+        'name' => env('MAIL_FROM_NAME', 'AgendaMatic - Sistema de agendamiento de reuniones.'),
     ],
 
     /*

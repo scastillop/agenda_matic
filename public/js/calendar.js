@@ -89,7 +89,7 @@ $( document ).ready(function() {
 					url:currentLocation+'guests/rejectById',
 			   		type:'POST',
 			   		headers: {'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')},
-			   		data:{id: data.id, user_id: 10},			   		
+			   		data:{id: data.id},			   		
 			   		success:function(success){
 			   			if(success){
 			   				fillCalendar();
@@ -109,7 +109,7 @@ $( document ).ready(function() {
 			 	$('#modal_eliminar').modal();
 			 	$('#modal_eliminar_cancelar').click(function(){
 			 		$.ajax({
-					url:currentLocation+'schedules/cancelById',
+					url:currentLocation+'schedules/cancelIdMail',
 			   		type:'POST',
 			   		headers: {'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')},
 			   		data:{id: data.id},
@@ -697,30 +697,6 @@ $("#modal_agendar_aceptar").click(function(){
 		   				fillCalendar();
 		   				$('#modal_agendar').modal('hide');
 		   				$('#modal_exito').modal('show');
-
-		   				data={to_email : "jonathan.arce.93@gmail.com", 
-		   						nameUser: "Jonathan",
-	 							subject: "Agendamiento reunion",
-	 							ownerUser: "Jorge",
-	 							dateSchedule: "28-10-2018"
-	 							}
-
-		   				$.ajax({
-							url:currentLocation+'mail/send',
-					   		type:'POST',
-					   		headers: {'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')},
-					   		data:data,
-					   		success:function(status){
-					   			if(status){
-					   				console.log("ok");
-					   			}
-					   		},
-					   		error: function(e){
-					   			console.log(e); 		
-					   		}
-		   				});
-
-
 		   			}
 		   		},
 		   		error: function(e){
@@ -766,7 +742,6 @@ $("#modal_bloquear_aceptar").click(function(){
  		$( "#modal_bloquear_aceptar" ).prop("disabled", false);
 
  		data={
- 			id_guest : ["10"], 
  			titulo: titulo,
  			inicio: inicio,
  			final: final,
