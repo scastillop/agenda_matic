@@ -267,6 +267,28 @@ $( document ).ready(function() {
     $("#datetimepicker6").on("change.datetimepicker", function (e) {
         $('#datetimepicker5').datetimepicker('maxDate', e.date);
     });
+
+    $('#datetimepicker3').datetimepicker({
+    	useCurrent: false,
+		icons: {
+            time: 'far fa-clock',
+            date: 'far fa-calendar-alt',
+        },
+         maxDate: moment()
+	});
+    $('#datetimepicker4').datetimepicker({
+        icons: {
+            time: 'far fa-clock',
+            date: 'far fa-calendar-alt',
+        },
+        maxDate: moment()
+    });
+    $("#datetimepicker3").on("change.datetimepicker", function (e) {
+        $('#datetimepicker4').datetimepicker('minDate', e.date);
+    });
+    $("#datetimepicker4").on("change.datetimepicker", function (e) {
+        $('#datetimepicker3').datetimepicker('maxDate', e.date);
+    });
 	setInterval(fillCalendar(), 12000);
 });
 
@@ -780,3 +802,49 @@ $("#modal_bloquear_aceptar").click(function(){
  	}
 });
 
+$("#estadisticas").click(function(){
+	$('#datetimepicker4').data("datetimepicker").maxDate(moment());
+	$('#datetimepicker3').data("datetimepicker").maxDate(moment());
+	$('#datetimepicker4').data("datetimepicker").defaultDate(moment(new Date()).subtract("m", 1));
+	$('#datetimepicker3').data("datetimepicker").defaultDate(moment(new Date()).subtract("M", 1));
+	generarEstadisticas();
+	$("#modal_estadistica").modal();
+});
+
+function generarEstadisticas(){
+	var inicio = $.trim($('#modal_estadisticas_inicio').val());
+ 	var final = $.trim($('#modal_estadisticas_termino').val());
+ 	if(inicio!=""&&final!=""){
+ 		var inicio = moment(inicio, 'DD/MM/YYYY HH:mm').format('YYYYMMDD HH:mm');
+ 		var final = moment(final, 'DD/MM/YYYY HH:mm').format('YYYYMMDD HH:mm');
+ 		var currentLocation = window.location;
+ 		var data={inicio:inicio, final:final};
+	 	$.ajax({
+			url:currentLocation+"users/statistics",
+	   		type:'POST',
+	   		headers: {'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')},
+	   		data:data,
+	   		success:function(users){
+	   			$('#tabla_estadisticas tbody').empty();
+	   			users.forEach(function(user) {
+	   				$('#tabla_estadisticas tbody').append('<tr><td>'+user.name+'</td><td>'+user.reuniones+'</td><td>'+user.asistencia+'</td><td>'+redondear((user.asistencia*100)/user.reuniones)+'%</td><td>'+user.bloqueados+'</td></tr>');
+	   			});
+	   		},
+	   		error: function(e){
+	   			console.log(e); 		
+	   		}
+	   	});
+	 } 			
+}
+
+function redondear(numero){
+	if(numero%1==0){
+		return numero;
+	}else{
+		return numero.toFixed(2)
+	}
+}
+
+ $('.modal_estadisticas_rango').on("input",function(){
+ 	generarEstadisticas();
+ });

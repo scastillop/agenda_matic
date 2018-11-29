@@ -60,6 +60,8 @@
 			 		<button type="button" class="btn btn-default boton_opciones" id="agendar">Agendar Reunion</button>
 			 		<br>
 			 		<button type="button" class="btn btn-default boton_opciones" id="bloquear">Bloquear Fecha</button>
+			 		<br>
+			 		<button type="button" class="btn btn-default boton_opciones" id="estadisticas">Estadísticas</button>
 			 	</div>
 			 </div>
 		</div>
@@ -525,6 +527,87 @@
 	  </div>
 	</div>
 
+	<div class="modal fade" id="modal_estadistica" tabindex="10" role="dialog" aria-hidden="true">
+	  <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
+	    <div class="modal-content">
+	      <div class="modal-header">
+	        <h2 class="modal-title">Estadísticas</h2>
+	        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+	          <span aria-hidden="true">&times;</span>
+	        </button>
+	      </div>
+	      <div class="modal-body">
+	   		<div class='row'>
+		        <div class="form-group m-0 col-md-6">
+					<label for="datetimepicker3" class="text-nowrap m-0">Fecha y hora de inicio</label>
+		           	<div class="input-group date" id="datetimepicker3" data-target-input="nearest">
+		                <input type="text" class="form-control datetimepicker-input input-chico modal_estadisticas_rango modal_estadisticas_form" data-target="#datetimepicker3" id="modal_estadisticas_inicio" />
+		                <div class="input-group-append" data-target="#datetimepicker3" data-toggle="datetimepicker">
+		                    <div class="input-group-text input-chico rounded-0"><i class="far fa-calendar-alt"></i></div>
+		                </div>
+		            </div>
+		        </div>
+		         <div class="form-group m-0 col-md-6">
+		        	<label for="datetimepicker4" class="text-nowrap m-0">Fecha y hora de termino</label>
+		           	<div class="input-group date" id="datetimepicker4" data-target-input="nearest">
+		                <input type="text" class="form-control datetimepicker-input input-chico rounded-0 modal_estadisticas_rango modal_estadisticas_form" data-target="#datetimepicker4" id="modal_estadisticas_termino"/>
+		                <div class="input-group-append" data-target="#datetimepicker4" data-toggle="datetimepicker">
+		                    <div class="input-group-text input-chico"><i class="far fa-calendar-alt"></i></div>
+		                </div>
+		            </div>
+		    	</div>
+		    </div>    
+		    <hr>
+		    <div class="row pl-3 pr-3 overscroll">
+		    	<table class="table-bordered" id="tabla_estadisticas">
+					<thead>
+						<tr>
+							<th>Usuario</th>
+							<th>Total<br>reuniones</th>
+							<th>Total<br>asistencia</th>
+							<th>Porcentaje<br>asistencia</th>
+							<th>Días<br>bloqueados</th>
+						</tr>
+					</thead>
+					<tbody>
+						<tr>
+							<td>Usuario 1</td>
+							<td>25</td>
+							<td>20</td>
+							<td>80%</td>
+							<td>5</td>
+						</tr>
+						<tr>
+							<td>Usuario 1</td>
+							<td>25</td>
+							<td>20</td>
+							<td>80%</td>
+							<td>5</td>
+						</tr>
+						<tr>
+							<td>Usuario 1</td>
+							<td>25</td>
+							<td>20</td>
+							<td>80%</td>
+							<td>5</td>
+						</tr>
+						<tr>
+							<td>Usuario 1</td>
+							<td>25</td>
+							<td>20</td>
+							<td>80%</td>
+							<td>5</td>
+						</tr>
+					</tbody>
+				</table>
+		    </div>     
+	      </div>
+	      <div class="modal-footer">
+	      	<button type="button" class="btn btn-success" data-dismiss="modal" id="modal_estadistica_volver">Volver</button>
+	      </div>
+	    </div>
+	  </div>
+	</div>
 	<script src="https://code.jquery.com/jquery-3.3.1.min.js" integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8=" crossorigin="anonymous"></script>
 	<script src="https://unpkg.com/popper.js"></script>
 	<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js" integrity="sha384-ChfqqxuZUCnJSK3+MXmPNIyE6ZbWh2IMqE241rYiqJxyMiZ6OW/JmZQ5stwEULTy" crossorigin="anonymous"></script>

@@ -40,9 +40,7 @@ class Schedule extends BaseModel
         ->get();
         return $schedules;
      }
-
-     
-     
+  
     public static function getById($id){
 
          $schedule = \DB::table('schedule')
@@ -62,6 +60,11 @@ class Schedule extends BaseModel
         $schedules = \DB::table('schedules')
         ->where('id', "=", $id)
         ->update(['registered_assistance' => true]);
-    }  
+    }
 
+    public static function cancelById($id){
+        $schedules = \DB::table('schedules')
+        ->where('id', "=", $id)
+        ->update(['status' => "canceled"]);
+    }
 }

@@ -202,4 +202,5 @@ class ScheduleController extends Controller
         }
         return $quantity;
     }
+
 }

@@ -173,4 +173,23 @@ class UserController extends Controller
        return User::getAll();
     }
 
+    public function statistics(Request $request)
+    {
+        $request->validate([
+            'inicio' => 'required|date',
+            'final' => 'required|date'
+        ]);
+        $statisticsAssistance = User::statisticsAssistance($request);
+        $statisticsBlocks = User::statisticsBlocks($request);
+        foreach ($statisticsBlocks as $block) {
+            foreach ($statisticsAssistance as $assistance) {
+                if($assistance->id==$block->id){
+                    $assistance->bloqueos=$block->bloqueos;
+                    $assistance->bloqueados=$block->bloqueados;
+                }
+            }
+        }
+        return $statisticsAssistance;
+    }
+
 }
