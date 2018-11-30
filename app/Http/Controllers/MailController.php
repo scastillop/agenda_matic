@@ -17,17 +17,18 @@ class MailController extends Controller
     public static function sendScheduleMsg($ownerId, $guests, $schedule){
 
         $start = Carbon::parse($schedule->start);
+        $hour = $start->format('H:i');
         $start = $start->format('d-m-Y');
-
         $guests = User::getByScheduleId($schedule->id);
         $to_email= array();
         foreach ($guests as $user){
             array_push($to_email, $user->email);         
         }
-        $messageScheduleBody = "El usuario ownerUser, le ha agendado una reunion para el dia dateSchedule.";
+        $messageScheduleBody = "El usuario ownerUser, le ha agendado una reunion para el dia dateSchedule a las dateHour.";
         $messagehead = "Estimado(a): ";
         $messageScheduleBody = str_replace('ownerUser',  Auth::user()->name, $messageScheduleBody);
         $messageScheduleBody = str_replace('dateSchedule', $start , $messageScheduleBody);
+        $messageScheduleBody = str_replace('dateHour', $hour , $messageScheduleBody);
         $to_subject = "Agendamiento reunion";
         $to_msg_header = $messagehead;
         $to_msg_body = $messageScheduleBody;
@@ -43,6 +44,7 @@ class MailController extends Controller
         $schedule = Schedule::getById($scheduleId);       
 
         $start = Carbon::parse($schedule[0]->start);
+        $hour = $start->format('H:i');
         $start = $start->format('d-m-Y');
 
         $owner = new User();
@@ -55,10 +57,11 @@ class MailController extends Controller
             array_push($to_email, $user->email);         
         }
         $messagehead = "Estimado(a):";
-        $messageScheduleBody = "La reunion agendada el dia dateSchedule, ha sido cancelada por el usuario nameOwner.";
+        $messageScheduleBody = "La reunion agendada el dia dateSchedule a las hourDate, ha sido cancelada por el usuario nameOwner.";
 
         $messageScheduleBody = str_replace('nameOwner', $owner[0]->name, $messageScheduleBody);
         $messageScheduleBody = str_replace('dateSchedule', $start, $messageScheduleBody);
+        $messageScheduleBody = str_replace('hourDate', $hour , $messageScheduleBody);
 
         $to_subject = "Se cancela reunion";
         $to_msg_header = $messagehead;
@@ -76,15 +79,17 @@ class MailController extends Controller
 
 
         $start = Carbon::parse($request['start']);
+        $hour = $start->format('H:i');
         $start = $start->format('d-m-Y');
 
         $messagehead = "Estimado nameOwner: ";
-        $messageScheduleBody = "El invitado nameGuest, ha rechazado la invitacion a la reunion agendada para el dia dateSchedule.";
+        $messageScheduleBody = "El invitado nameGuest, ha rechazado la invitacion a la reunion agendada para el dia dateSchedule a las hourDate.";
 
 
         $messagehead = str_replace('nameOwner', $owner[0]->name, $messagehead);
         $messageScheduleBody = str_replace('nameGuest',  Auth::user()->name, $messageScheduleBody);
         $messageScheduleBody = str_replace('dateSchedule', $start, $messageScheduleBody);
+        $messageScheduleBody = str_replace('hourDate', $hour , $messageScheduleBody);
 
         $to_subject = "Rechazo de asistencia";
         $to_email = $owner[0]->email;
