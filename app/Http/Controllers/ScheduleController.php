@@ -184,7 +184,7 @@ class ScheduleController extends Controller
 
         $schedule = new Schedule();
 
-        if($request["todo_el_dia"]){
+        if($request["todo_el_dia"]=="1"){
             $start = Carbon::parse($request['inicio']);
             $start->hour = 0;
             $start->minute = 0;

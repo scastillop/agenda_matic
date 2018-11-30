@@ -1,4 +1,5 @@
 $( document ).ready(function() {
+	setInterval(fillCalendar, 120000);
 	if ($(window).width() < 514){
         $('#calendar').fullCalendar('option', 'aspectRatio', 0.7);
     } else {
@@ -20,6 +21,11 @@ $( document ).ready(function() {
 			}
 		},
 		eventClick: function (data, event, view) {
+			$('.editar').remove();
+			$('.ver').remove();
+			$('.cancelar').remove();
+			$('.eliminar').remove();
+			$('.asistencia').remove();
 			var currentLocation = window.location;
 			//console.log(data);
 			$('.popover').popover('hide');
@@ -129,6 +135,11 @@ $( document ).ready(function() {
 			 	});
 			});
 			$('.ver').click(function(){
+				if(data.tipo=="off"){
+					$(".no_bloqueo").hide();
+				}else{
+					$(".no_bloqueo").show();
+				}
 				$( '#modal_ver_titulo' ).text(data.title);
 				$('.popover').popover('hide');
 				$('#modal_ver_inicio').text(data.start.format("DD/MM/YYYY HH:mm"));
@@ -289,7 +300,7 @@ $( document ).ready(function() {
     $("#datetimepicker4").on("change.datetimepicker", function (e) {
         $('#datetimepicker3').datetimepicker('maxDate', e.date);
     });
-	setInterval(fillCalendar(), 12000);
+	
 });
 
 $( window ).resize(function() {

@@ -418,11 +418,11 @@
 					      	<label for="modal_ver_termino" class="text-nowrap m-0"><strong>Fecha y hora de termino</strong></label>
 					        <div class="modal_ver_rango modal_ver_form" id="modal_ver_termino">15/15/15 15:15</div>
 					    </div>
-						<div class="col-12 mt-2 mb-1 pr-2 pl-0">
+						<div class="col-12 mt-2 mb-1 pr-2 pl-0 no_bloqueo">
 							<label for="modal_ver_ubicacion" class="m-0 p-0"><strong>Ubicacion</strong></label>
 						    <div class="modal_ver_fecha modal_ver_form pt-0 pb-0" id="modal_ver_ubicacion">Sala algo</div>
 						</div>
-						<div class="col-6 p-0 mt-2 mb-1 pr-0 pl-1">
+						<div class="col-6 p-0 mt-2 mb-1 pr-0 pl-1 no_bloqueo">
 							<div class="m-0 p-0"><strong>EL evento es rechazable</strong></div>
 							 <div class="modal_ver_form" id="modal_ver_rechazable">Si</div>
 						</div>
@@ -434,7 +434,7 @@
 							<label for="modal_ver_detalles" class="m-0"><strong>Detalles del evento</strong></label>
 						 	<div class="modal_ver_form" id="modal_ver_detalles">Estos son unos lindos detalles que tiene esta reunion</div>
 						</div>
-						<div class="col-12 p-0 m-0">
+						<div class="col-12 p-0 m-0 no_bloqueo">
 							<label for="modal_ver_invitados" class="m-0 p-0"><strong>Invitados</strong></label>
 							<div class="modal_ver_fecha modal_ver_form" id="modal_ver_invitados">inviitado1<br>invitado2<br>invitado3</div>
 					  	</div>
